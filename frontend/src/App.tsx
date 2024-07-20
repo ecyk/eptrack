@@ -1,11 +1,14 @@
 import Footer from "./components/Footer";
+import Grid from "./components/Grid";
 import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <>
       <NavBar />
-      <p>EpTrack</p>
+      <hr />
+      <Grid />
+      <hr />
       <Footer />
     </>
   );

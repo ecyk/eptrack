@@ -9,7 +9,7 @@ function NavBar() {
       <ul>
         <li className={styles["navbar-list-item"]}>
           <h1 className={styles["navbar-title"]}>
-            <strong>WatchList</strong>
+            <strong>EpTrack</strong>
           </h1>
         </li>
       </ul>
