@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useEffect } from "react";
 
 import styles from "./Grid.module.css";
 
@@ -26,6 +27,17 @@ function Item({ shimmer, title, url }: ItemProps) {
 }
 
 function Grid() {
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/media");
+      const data = await response.json();
+
+      console.log(data);
+    };
+
+    fetchData().catch(console.error);
+  }, []);
+
   return (
     <div className={styles.grid}>
       {Array.from({ length: 25 }, (_: unknown, index: number) => (
