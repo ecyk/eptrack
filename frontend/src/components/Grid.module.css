@@ -8,6 +8,13 @@
   margin-bottom: 0;
 }
 
+.btn {
+  width: 100%;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
 .image {
   border-radius: var(--pico-border-radius);
 }
@@ -38,4 +45,10 @@
   to {
     background-position-x: 0%;
   }
+}
+
+.end-message {
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 0;
 }

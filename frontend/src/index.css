@@ -53,9 +53,9 @@ article {
   border: 1px solid var(--pico-muted-border-color);
   border-radius: calc(var(--pico-border-radius) * 2);
   /* var(--pico-border-radius) */
-  --pico-block-spacing-vertical: calc(var(--pico-spacing) / 2);
+  --pico-block-spacing-vertical: calc(var(--pico-spacing) / 4);
   /* var(--pico-spacing) */
-  --pico-block-spacing-horizontal: calc(var(--pico-spacing) / 2);
+  --pico-block-spacing-horizontal: calc(var(--pico-spacing) / 4);
   /* var(--pico-spacing) */
 }
 
