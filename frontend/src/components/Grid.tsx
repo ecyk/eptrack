@@ -1,8 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import classNames from "classnames";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import useModal from "../contexts/useModal";
 import styles from "./Grid.module.css";
+import Modal from "./Modal";
 
 interface ItemProps {
   shimmer: boolean;
@@ -30,16 +33,20 @@ function Item({ shimmer, title, url }: ItemProps) {
 }
 
 interface Page {
-  data: Media[];
+  results: Media[];
   total_pages: number;
+  error?: string;
   nextCursor?: number;
 }
 
 function Grid() {
   const fetchItems = async ({ pageParam = 1 }) => {
-    const response = await fetch(`/media?page=${pageParam}`);
+    const response = await fetch(`/api/items?page=${pageParam}`);
     const page = (await response.json()) as Page;
-    if (page.data.length && pageParam < page.total_pages) {
+    if (page.error) {
+      throw new Error(page.error);
+    }
+    if (page.results.length && pageParam < page.total_pages) {
       page.nextCursor = pageParam + 1;
     }
     return page;
@@ -48,6 +55,7 @@ function Grid() {
   const {
     data,
     error,
+    errorUpdateCount,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -57,17 +65,26 @@ function Grid() {
     queryFn: fetchItems,
     initialPageParam: 1,
     getNextPageParam: (lastPage: Page) => lastPage.nextCursor,
+    staleTime: Infinity,
   });
 
   const loadingSkeletonCount = 25;
   const totalItemCount =
-    data?.pages.reduce((total, page) => total + page.data.length, 0) ??
+    data?.pages.reduce((total, page) => total + page.results.length, 0) ??
     loadingSkeletonCount;
+
+  const [lastErrorCount, setLastErrorCount] = useState(0);
+  const { modalIsOpen, handleOpen } = useModal();
+
+  useEffect(() => {
+    if (!modalIsOpen && errorUpdateCount != lastErrorCount && error) {
+      setLastErrorCount(errorUpdateCount);
+      handleOpen();
+    }
+  }, [modalIsOpen, handleOpen, error, errorUpdateCount, lastErrorCount]);
 
   return (
     <>
-      {error && <div>Error: {error.message}</div>}
-
       <InfiniteScroll
         dataLength={totalItemCount}
         next={fetchNextPage}
@@ -81,7 +98,7 @@ function Grid() {
       >
         <div className={styles.grid}>
           {data?.pages.flatMap((page, index) =>
-            page.data.map((item, innerIndex) => (
+            page.results.map((item, innerIndex) => (
               <Item
                 key={`media-${index}-${innerIndex}`}
                 shimmer={false}
@@ -96,6 +113,11 @@ function Grid() {
             ))}
         </div>
       </InfiniteScroll>
+      {modalIsOpen && (
+        <Modal title={"Error"} hasCancel={false}>
+          <p>{error?.message}</p>
+        </Modal>
+      )}
     </>
   );
 }

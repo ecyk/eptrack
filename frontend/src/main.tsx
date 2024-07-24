@@ -5,6 +5,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App.tsx";
+import ModalProvider from "./contexts/ModalProvider.tsx";
 import ThemeProvider from "./contexts/ThemeProvider.tsx";
 
 const queryClient = new QueryClient();
@@ -12,7 +13,7 @@ const queryClient = new QueryClient();
 async function enableMocking() {
   if (import.meta.env.DEV) {
     const { worker } = await import("./mocks/browser");
-    return worker.start();
+    return worker.start({ onUnhandledRequest: "bypass" });
   }
 }
 
@@ -21,7 +22,9 @@ void enableMocking().then(() => {
     <React.StrictMode>
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <ModalProvider>
+            <App />
+          </ModalProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </React.StrictMode>

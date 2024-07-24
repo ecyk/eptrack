@@ -1,13 +1,16 @@
 interface Media {
   id: number;
-  media_type: "movie" | "tv";
+  poster_path: string;
+  title: string;
+}
+
+interface MediaDetail extends Media {
+  media_type: string;
   genre_ids: number[];
   original_language: string;
   overview: string;
   popularity: number;
-  poster_path: string;
   release_date: string;
-  title: string;
   vote_average: number;
   vote_count: number;
 }
