@@ -14,8 +14,8 @@ function ModalProvider({ children }: PropsWithChildren) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const modalAnimationDuration = 400;
 
-  const handleOpen = (e?: React.MouseEvent) => {
-    e?.preventDefault();
+  const handleOpen = (event?: React.MouseEvent) => {
+    event?.preventDefault();
     if (htmlTag instanceof HTMLElement) {
       setModalIsOpen(true);
       htmlTag.classList.add("modal-is-open", "modal-is-opening");
@@ -26,13 +26,14 @@ function ModalProvider({ children }: PropsWithChildren) {
   };
 
   const handleClose = useCallback(
-    (e?: React.MouseEvent) => {
-      e?.preventDefault();
+    (event?: React.MouseEvent, onClose?: () => void) => {
+      event?.preventDefault();
       if (htmlTag instanceof HTMLElement) {
         htmlTag.classList.add("modal-is-closing");
         setTimeout(() => {
           setModalIsOpen(false);
           htmlTag.classList.remove("modal-is-open", "modal-is-closing");
+          onClose && onClose();
         }, modalAnimationDuration);
       }
     },
@@ -40,10 +41,10 @@ function ModalProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (!modalIsOpen) return;
-      if (e.key === "Escape") {
-        handleClose(e as unknown as React.MouseEvent);
+      if (event.key === "Escape") {
+        handleClose(event as unknown as React.MouseEvent);
       }
     };
     window.addEventListener("keydown", handleEscape);

@@ -10,8 +10,8 @@ function ColorSchemeSwitcher(
   const nextThemeLabel =
     theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
 
-  const handleSwitchTheme = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleSwitchTheme = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     switchTheme();
   };
 

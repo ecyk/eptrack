@@ -2,12 +2,12 @@ import { useContext } from "react";
 
 import ModalContext, { ModalContextProps } from "./ModalContext";
 
-const useModal = (): ModalContextProps => {
+function useModal(): ModalContextProps {
   const context = useContext(ModalContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useModal must be used within a ModalProvider");
   }
   return context;
-};
+}
 
 export default useModal;

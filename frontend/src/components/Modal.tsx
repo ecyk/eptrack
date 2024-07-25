@@ -1,25 +1,27 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 import useModal from "../contexts/useModal";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
-  title: string;
+  title: string | ReactNode;
   hasCancel?: boolean;
-  onOK?: () => void;
+  onSave?: () => void;
+  onClose?: () => void;
 }
 
 function Modal({
   title,
   hasCancel,
-  onOK,
+  onSave,
+  onClose,
   children,
 }: PropsWithChildren<ModalProps>) {
   const { modalIsOpen, handleClose } = useModal();
 
   const handleClickOverlay = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
-      handleClose(event);
+      handleClose(event, onClose);
     }
   };
 
@@ -27,23 +29,34 @@ function Modal({
     <dialog onClick={handleClickOverlay} open={modalIsOpen}>
       <article className={styles.modal}>
         <header>
-          <button aria-label="Close" rel="prev" onClick={handleClose}></button>
+          <button
+            aria-label="Close"
+            rel="prev"
+            onClick={(event) => {
+              handleClose(event, onClose);
+            }}
+          ></button>
           <h1>{title}</h1>
         </header>
         {children}
         <footer>
           {hasCancel && (
-            <button className="secondary" onClick={handleClose}>
+            <button
+              className="secondary"
+              onClick={(event) => {
+                handleClose(event, onClose);
+              }}
+            >
               Cancel
             </button>
           )}
           <button
-            onClick={(e) => {
-              onOK && onOK();
-              handleClose(e);
+            onClick={(event) => {
+              onSave && onSave();
+              handleClose(event, onClose);
             }}
           >
-            OK
+            Save
           </button>
         </footer>
       </article>

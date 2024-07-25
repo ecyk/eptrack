@@ -10,15 +10,17 @@ const combined_detail: MediaDetail[] = movies
   .concat(shows)
   .sort(() => Math.random() - 0.5);
 
-const combined: Media[] = combined_detail.map(({ id, poster_path, title }) => {
-  return { id, poster_path, title };
-});
+const combined: Media[] = combined_detail.map(
+  ({ id, media_type, genre_ids, original_language, poster_path, title }) => {
+    return { id, media_type, genre_ids, original_language, poster_path, title };
+  }
+);
 
 const maxPageSize = 25;
 
 export const handlers = [
   http.get("/api/items", async ({ request }) => {
-    await delay(1000);
+    await delay(500);
 
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") ?? "1", 10);
@@ -51,7 +53,7 @@ export const handlers = [
     });
   }),
   http.get("/api/items/:id", async ({ params }) => {
-    await delay(1000);
+    await delay(500);
 
     const id = parseInt(params.id as string, 10);
     if (isNaN(id) || id < 0) {

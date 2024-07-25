@@ -1,94 +1,102 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import { fetchDetail, fetchItems } from "../api";
 import useModal from "../contexts/useModal";
+import DetailModal from "./DetailModal";
 import styles from "./Grid.module.css";
-import Modal from "./Modal";
 
-interface ItemProps {
-  shimmer: boolean;
-  title?: string;
-  url?: string;
+interface SkeletonProps {
+  className?: string;
 }
 
-function Item({ shimmer, title, url }: ItemProps) {
+function Skeleton({ className, children }: PropsWithChildren<SkeletonProps>) {
   return (
-    <article className={styles.item}>
-      <button className={`outline contrast ${styles.btn}`}>
-        <div className={classNames(styles.shimmer, styles["shimmer-image"])}>
-          {!shimmer && url && <img className={styles.image} src={url} />}
-        </div>
-        <div
-          className={classNames(styles["shimmer-line"], {
-            [styles.shimmer]: shimmer,
-          })}
-        >
-          {!shimmer && title && <figcaption>{title}</figcaption>}
-        </div>
+    <div className={classNames(styles.skeleton, className)}>{children}</div>
+  );
+}
+
+interface ItemProps {
+  media?: Media;
+  onClick?: (event: React.MouseEvent, id: number) => void;
+}
+
+function Item({ media, onClick }: ItemProps) {
+  return (
+    <article
+      className={styles.item}
+      onClick={(event) => media?.id && onClick && onClick(event, media.id)}
+    >
+      <button className={classNames("outline", "contrast", styles.btn)}>
+        <Skeleton className={styles["skeleton-image"]}>
+          {media?.poster_path && (
+            <img
+              className={styles.image}
+              src={`https://www.themoviedb.org/t/p/w500${media.poster_path}`}
+            />
+          )}
+        </Skeleton>
+        {
+          <figcaption>
+            {media?.title ?? <Skeleton className={styles["skeleton-line"]} />}
+          </figcaption>
+        }
       </button>
     </article>
   );
 }
 
-interface Page {
-  results: Media[];
-  total_pages: number;
-  error?: string;
-  nextCursor?: number;
-}
-
 function Grid() {
-  const fetchItems = async ({ pageParam = 1 }) => {
-    const response = await fetch(`/api/items?page=${pageParam}`);
-    const page = (await response.json()) as Page;
-    if (page.error) {
-      throw new Error(page.error);
-    }
-    if (page.results.length && pageParam < page.total_pages) {
-      page.nextCursor = pageParam + 1;
-    }
-    return page;
-  };
-
-  const {
-    data,
-    error,
-    errorUpdateCount,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isPending,
-  } = useInfiniteQuery({
+  const items = useInfiniteQuery({
     queryKey: ["items"],
-    queryFn: fetchItems,
+    queryFn: ({ pageParam }) =>
+      toast.promise(fetchItems(pageParam), {
+        loading: "Loading items...",
+        success: <b>Items loaded!</b>,
+        error: <b>Could not load items.</b>,
+      }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage: Page) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Infinity,
   });
 
   const loadingSkeletonCount = 25;
   const totalItemCount =
-    data?.pages.reduce((total, page) => total + page.results.length, 0) ??
+    items.data?.pages.reduce((total, page) => total + page.results.length, 0) ??
     loadingSkeletonCount;
 
-  const [lastErrorCount, setLastErrorCount] = useState(0);
   const { modalIsOpen, handleOpen } = useModal();
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+
+  const details = useQuery<MediaDetail, Error>({
+    queryKey: ["itemDetail", selectedItemId],
+    queryFn: () =>
+      toast.promise(fetchDetail(selectedItemId), {
+        loading: "Loading details...",
+        success: <b>Details loaded!</b>,
+        error: <b>Could not load details.</b>,
+      }),
+    enabled: selectedItemId !== null,
+    staleTime: Infinity,
+  });
 
   useEffect(() => {
-    if (!modalIsOpen && errorUpdateCount != lastErrorCount && error) {
-      setLastErrorCount(errorUpdateCount);
+    if (!modalIsOpen && selectedItemId !== null && details.isSuccess) {
       handleOpen();
     }
-  }, [modalIsOpen, handleOpen, error, errorUpdateCount, lastErrorCount]);
+  }, [modalIsOpen, handleOpen, selectedItemId, details.isSuccess]);
 
   return (
     <>
+      <Toaster position="top-right" />
       <InfiniteScroll
         dataLength={totalItemCount}
-        next={fetchNextPage}
-        hasMore={hasNextPage}
+        next={items.fetchNextPage}
+        style={{ overflowY: "hidden" }}
+        hasMore={items.hasNextPage}
         loader={null}
         endMessage={
           <p className={styles["end-message"]}>
@@ -97,26 +105,31 @@ function Grid() {
         }
       >
         <div className={styles.grid}>
-          {data?.pages.flatMap((page, index) =>
+          {items.data?.pages.flatMap((page, index) =>
             page.results.map((item, innerIndex) => (
               <Item
                 key={`media-${index}-${innerIndex}`}
-                shimmer={false}
-                title={item.title}
-                url={`https://www.themoviedb.org/t/p/w600_and_h900_bestv2${item.poster_path}`}
+                media={item}
+                onClick={(_, id) => setSelectedItemId(id)}
               />
             ))
           )}
-          {(isFetchingNextPage || isPending) &&
+          {(items.isLoading || items.isLoadingError) &&
             Array.from({ length: loadingSkeletonCount }, (_, index) => (
-              <Item key={`skeleton-${index}`} shimmer={true} />
+              <Item key={`skeleton-${index}`} />
             ))}
         </div>
       </InfiniteScroll>
       {modalIsOpen && (
-        <Modal title={"Error"} hasCancel={false}>
-          <p>{error?.message}</p>
-        </Modal>
+        <DetailModal
+          tags={[
+            { text: "Watched", checked: false },
+            { text: "Watching", checked: false },
+          ]}
+          media={details.data!}
+          onSave={(dropdowns) => console.log(dropdowns)}
+          onClose={() => setSelectedItemId(null)}
+        />
       )}
     </>
   );

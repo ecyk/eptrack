@@ -49,6 +49,11 @@ h6 {
   --pico-font-weight: 600; /* 700 */
 }
 
+p {
+  margin-bottom: calc(var(--pico-typography-spacing-vertical) / 2);
+  /* var(--pico-typography-spacing-vertical) */
+}
+
 article {
   border: 1px solid var(--pico-muted-border-color);
   border-radius: calc(var(--pico-border-radius) * 2);

@@ -1,0 +1,9 @@
+:global(.dropdown).inline[open] summary::before {
+  position: absolute; /* fixed */
+  width: 100%; /* 100vw */
+  height: 100%; /* 100vh */
+}
+
+:global(.dropdown).inline summary + ul {
+  position: relative; /* absolute */
+}
