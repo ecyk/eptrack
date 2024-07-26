@@ -4,15 +4,15 @@ import movies_ from "./movies.json";
 import shows_ from "./shows.json";
 
 const movies: MediaDetail[] = movies_;
-const shows: MediaDetail[] = shows_;
+const shows: ShowDetail[] = shows_;
 
 const combined_detail: MediaDetail[] = movies
   .concat(shows)
   .sort(() => Math.random() - 0.5);
 
 const combined: Media[] = combined_detail.map(
-  ({ id, media_type, genre_ids, original_language, poster_path, title }) => {
-    return { id, media_type, genre_ids, original_language, poster_path, title };
+  ({ id, name, type, poster_path }) => {
+    return { id, name, type, poster_path };
   }
 );
 
@@ -60,9 +60,7 @@ export const handlers = [
       return HttpResponse.json({ error: "Invaild id" }, { status: 400 });
     }
 
-    const item: MediaDetail | undefined = combined_detail.find(
-      (item) => item.id === id
-    );
+    const item = combined_detail.find((item) => item.id === id);
 
     if (!item) {
       return HttpResponse.json({ error: "Item not found" }, { status: 404 });

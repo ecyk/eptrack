@@ -5,28 +5,6 @@ import Dropdown from "./Dropdown";
 import { DropdownItem, DropdownProps } from "./Dropdown";
 import Modal from "./Modal";
 
-const genres: Record<string, string> = {
-  28: "Action",
-  12: "Adventure",
-  16: "Animation",
-  35: "Comedy",
-  80: "Crime",
-  99: "Documentary",
-  18: "Drama",
-  10751: "Family",
-  14: "Fantasy",
-  36: "History",
-  27: "Horror",
-  10402: "Music",
-  9648: "Mystery",
-  10749: "Romance",
-  878: "Science Fiction",
-  10770: "TV Movie",
-  53: "Thriller",
-  10752: "War",
-  37: "Western",
-};
-
 interface MediaModalProps {
   tags: DropdownItem[];
   media: MediaDetail;
@@ -35,13 +13,36 @@ interface MediaModalProps {
 }
 
 function MediaModal({ tags, media, onSave, onClose }: MediaModalProps) {
-  const [dropdowns, setDropdowns] = useState<DropdownProps[]>([
-    {
-      text: "Tags",
-      items: [...tags],
-      initialOpen: true,
-    },
-  ]);
+  const initializeDropdowns = (): DropdownProps[] => {
+    const initialDropdowns: DropdownProps[] = [
+      {
+        text: "Tags",
+        items: [...tags],
+        initialOpen: true,
+        inline: true,
+      },
+    ];
+
+    if (media.type === "tv") {
+      (media as ShowDetail).seasons.forEach((season, seasonIndex) => {
+        initialDropdowns.push({
+          text: season.name,
+          items: season.episodes.map((episode, episodeIndex) => ({
+            text: `${episodeIndex + 1}. ${episode.name}`,
+            name: `s${seasonIndex + 1}e${episodeIndex + 1}`,
+            checked: false,
+          })),
+          inline: true,
+        });
+      });
+    }
+
+    return initialDropdowns;
+  };
+
+  const [dropdowns, setDropdowns] = useState<DropdownProps[]>(
+    initializeDropdowns()
+  );
 
   const handleDropdownChange = (dropdownIndex: number, itemIndex: number) => {
     setDropdowns((prev) =>
@@ -54,7 +55,7 @@ function MediaModal({ tags, media, onSave, onClose }: MediaModalProps) {
 
   return (
     <Modal
-      title={media.title}
+      title={media.name}
       onSave={() => onSave && onSave(dropdowns)}
       onClose={onClose}
     >
@@ -62,7 +63,7 @@ function MediaModal({ tags, media, onSave, onClose }: MediaModalProps) {
         <p>{media.overview}</p>
         <p>
           <b>Type: </b>
-          {media.media_type}
+          {media.type}
         </p>
         <p>
           <b>Original Language: </b>
@@ -74,19 +75,15 @@ function MediaModal({ tags, media, onSave, onClose }: MediaModalProps) {
         </p>
         <p>
           <b>Genre: </b>
-          {media.genre_ids
-            .map((id) => {
-              return genres[id] ?? "Unknown";
-            })
-            .join(", ")}
+          {media.genres.map(({ name }) => name).join(", ")}
         </p>
-        {dropdowns.map(({ text, items, initialOpen }, index) => (
+        {dropdowns.map(({ text, items, initialOpen, inline }, index) => (
           <Dropdown
             key={index}
             text={text}
             items={items}
-            initialOpen={initialOpen ?? false}
-            inline={text === "Tags"}
+            initialOpen={initialOpen}
+            inline={inline}
             onChange={(itemIndex) => handleDropdownChange(index, itemIndex)}
           />
         ))}

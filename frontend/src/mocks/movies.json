@@ -1,522 +1,634 @@
 [
   {
-    "id": 1022789,
-    "media_type": "movie",
-    "genre_ids": [16, 10751, 12, 35],
+    "id": 278,
+    "name": "The Shawshank Redemption",
+    "type": "movie",
+    "poster_path": "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Teenager Riley's mind headquarters is undergoing a sudden demolition to make room for something entirely unexpected: new Emotions! Joy, Sadness, Anger, Fear and Disgust, who’ve long been running a successful operation by all accounts, aren’t sure how to feel when Anxiety shows up. And it looks like she’s not alone.",
-    "popularity": 5571.077,
-    "poster_path": "/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
-    "release_date": "2024-06-11",
-    "title": "Inside Out 2",
-    "vote_average": 7.683,
-    "vote_count": 1943
+    "original_name": "The Shawshank Redemption",
+    "overview": "Imprisoned in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.",
+    "popularity": 164.235,
+    "release_date": "1994-09-23",
+    "status": "Released",
+    "vote_average": 8.707,
+    "budget": 25000000,
+    "imdb_id": "tt0111161",
+    "revenue": 28341469,
+    "runtime": 142,
+    "watched": false
   },
   {
-    "id": 519182,
-    "media_type": "movie",
-    "genre_ids": [16, 10751, 35, 28],
+    "id": 238,
+    "name": "The Godfather",
+    "type": "movie",
+    "poster_path": "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Gru and Lucy and their girls — Margo, Edith and Agnes — welcome a new member to the Gru family, Gru Jr., who is intent on tormenting his dad. Meanwhile, Gru faces a new nemesis in Maxime Le Mal and his femme fatale girlfriend Valentina, forcing the family to go on the run.",
-    "popularity": 4439.3,
-    "poster_path": "/3w84hCFJATpiCO5g8hpdWVPBbmq.jpg",
-    "release_date": "2024-06-20",
-    "title": "Despicable Me 4",
-    "vote_average": 7.392,
-    "vote_count": 338
+    "original_name": "The Godfather",
+    "overview": "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
+    "popularity": 185.288,
+    "release_date": "1972-03-14",
+    "status": "Released",
+    "vote_average": 8.692,
+    "budget": 6000000,
+    "imdb_id": "tt0068646",
+    "revenue": 245066411,
+    "runtime": 175,
+    "watched": false
   },
   {
-    "id": 748783,
-    "media_type": "movie",
-    "genre_ids": [16, 35, 10751, 12],
+    "id": 240,
+    "name": "The Godfather Part II",
+    "type": "movie",
+    "poster_path": "/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Garfield, the world-famous, Monday-hating, lasagna-loving indoor cat, is about to have a wild outdoor adventure! After an unexpected reunion with his long-lost father – scruffy street cat Vic – Garfield and his canine friend Odie are forced from their perfectly pampered life into joining Vic in a hilarious, high-stakes heist.",
-    "popularity": 2173.538,
-    "poster_path": "/p6AbOJvMQhBmffd0PIv0u8ghWeY.jpg",
-    "release_date": "2024-04-30",
-    "title": "The Garfield Movie",
-    "vote_average": 7.3,
-    "vote_count": 504
+    "original_name": "The Godfather Part II",
+    "overview": "In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba.",
+    "popularity": 126.065,
+    "release_date": "1974-12-20",
+    "status": "Released",
+    "vote_average": 8.577,
+    "budget": 13000000,
+    "imdb_id": "tt0071562",
+    "revenue": 102600000,
+    "runtime": 202,
+    "watched": false
   },
   {
-    "id": 974262,
-    "media_type": "movie",
-    "genre_ids": [14, 12, 10751, 35],
+    "id": 424,
+    "name": "Schindler's List",
+    "type": "movie",
+    "poster_path": "/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 36,
+        "name": "History"
+      },
+      {
+        "id": 10752,
+        "name": "War"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "After the Queen of Hearts incites a coup on Auradon, her rebellious daughter Red and Cinderella's perfectionist daughter Chloe join forces and travel back in time to try to undo the traumatic event that set Red's mother down her villainous path.",
-    "popularity": 2030.613,
-    "poster_path": "/8fYluTtB3b3HKO7KQa5tzrvGaps.jpg",
-    "release_date": "2024-07-11",
-    "title": "Descendants: The Rise of Red",
-    "vote_average": 7.257,
-    "vote_count": 148
+    "original_name": "Schindler's List",
+    "overview": "The true story of how businessman Oskar Schindler saved over a thousand Jewish lives from the Nazis while they worked as slaves in his factory during World War II.",
+    "popularity": 91.046,
+    "release_date": "1993-12-15",
+    "status": "Released",
+    "vote_average": 8.566,
+    "budget": 22000000,
+    "imdb_id": "tt0108052",
+    "revenue": 321365567,
+    "runtime": 195,
+    "watched": false
   },
   {
-    "id": 786892,
-    "media_type": "movie",
-    "genre_ids": [28, 12, 878],
+    "id": 389,
+    "name": "12 Angry Men",
+    "type": "movie",
+    "poster_path": "/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "As the world fell, young Furiosa is snatched from the Green Place of Many Mothers and falls into the hands of a great Biker Horde led by the Warlord Dementus. Sweeping through the Wasteland they come across the Citadel presided over by The Immortan Joe. While the two Tyrants war for dominance, Furiosa must survive many trials as she puts together the means to find her way home.",
-    "popularity": 1872.179,
-    "poster_path": "/iADOJ8Zymht2JPMoy3R7xceZprc.jpg",
-    "release_date": "2024-05-22",
-    "title": "Furiosa: A Mad Max Saga",
-    "vote_average": 7.65,
-    "vote_count": 2224
-  },
-  {
-    "id": 653346,
-    "media_type": "movie",
-    "genre_ids": [878, 12, 28],
-    "original_language": "en",
-    "overview": "Several generations following Caesar's reign, apes – now the dominant species – live harmoniously while humans have been reduced to living in the shadows. As a new tyrannical ape leader builds his empire, one young ape undertakes a harrowing journey that will cause him to question all he's known about the past and to make choices that will define a future for apes and humans alike.",
-    "popularity": 1631,
-    "poster_path": "/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
-    "release_date": "2024-05-08",
-    "title": "Kingdom of the Planet of the Apes",
-    "vote_average": 7.138,
-    "vote_count": 1965
-  },
-  {
-    "id": 280180,
-    "media_type": "movie",
-    "genre_ids": [28, 35, 80],
-    "original_language": "en",
-    "overview": "Forty years after his unforgettable first case in Beverly Hills, Detroit cop Axel Foley returns to do what he does best: solve crimes and cause chaos.",
-    "popularity": 1253.635,
-    "poster_path": "/zszRKfzjM5jltiq8rk6rasKVpUv.jpg",
-    "release_date": "2024-06-20",
-    "title": "Beverly Hills Cop: Axel F",
-    "vote_average": 6.913,
-    "vote_count": 641
-  },
-  {
-    "id": 573435,
-    "media_type": "movie",
-    "genre_ids": [28, 80, 53, 35],
-    "original_language": "en",
-    "overview": "After their late former Captain is framed, Lowrey and Burnett try to clear his name, only to end up on the run themselves.",
-    "popularity": 1268.169,
-    "poster_path": "/nP6RliHjxsz4irTKsxe8FRhKZYl.jpg",
-    "release_date": "2024-06-05",
-    "title": "Bad Boys: Ride or Die",
-    "vote_average": 7.12,
-    "vote_count": 573
-  },
-  {
-    "id": 560016,
-    "media_type": "movie",
-    "genre_ids": [28, 53],
-    "original_language": "en",
-    "overview": "Kid is an anonymous young man who ekes out a meager living in an underground fight club where, night after night, wearing a gorilla mask, he is beaten bloody by more popular fighters for cash. After years of suppressed rage, Kid discovers a way to infiltrate the enclave of the city’s sinister elite. As his childhood trauma boils over, his mysteriously scarred hands unleash an explosive campaign of retribution to settle the score with the men who took everything from him.",
-    "popularity": 1121.757,
-    "poster_path": "/4lhR4L2vzzjl68P1zJyCH755Oz4.jpg",
-    "release_date": "2024-04-03",
-    "title": "Monkey Man",
-    "vote_average": 7.066,
-    "vote_count": 609
-  },
-  {
-    "id": 729165,
-    "media_type": "movie",
-    "genre_ids": [53, 18, 28, 80],
-    "original_language": "en",
-    "overview": "Recently paroled thief Gabriel Russell tries to balance his life and mend a troubled family as an FBI agent hunts him down, along with his crew after a botched armored car robbery.",
-    "popularity": 1476.586,
-    "poster_path": "/jgF5XaXnJmOgMxulhy2k1f9LNNc.jpg",
-    "release_date": "2023-01-20",
-    "title": "Out of Exile",
-    "vote_average": 6.382,
-    "vote_count": 17
-  },
-  {
-    "id": 943344,
-    "media_type": "movie",
-    "genre_ids": [14, 12],
-    "original_language": "zh",
-    "overview": "",
-    "popularity": 1116.64,
-    "poster_path": "/lWVwWRLqpS1OaNg7KT0ZecSW0PK.jpg",
-    "release_date": "2023-04-27",
-    "title": "Underground Monster",
-    "vote_average": 3.667,
-    "vote_count": 6
-  },
-  {
-    "id": 823464,
-    "media_type": "movie",
-    "genre_ids": [878, 28, 12],
-    "original_language": "en",
-    "overview": "Following their explosive showdown, Godzilla and Kong must reunite against a colossal undiscovered threat hidden within our world, challenging their very existence – and our own.",
-    "popularity": 1030.795,
-    "poster_path": "/z1p34vh7dEOnLDmyCrlUVLuoDzd.jpg",
-    "release_date": "2024-03-27",
-    "title": "Godzilla x Kong: The New Empire",
-    "vote_average": 7.196,
-    "vote_count": 3218
-  },
-  {
-    "id": 646683,
-    "media_type": "movie",
-    "genre_ids": [27, 53],
-    "original_language": "en",
-    "overview": "A troubled actor begins to unravel while shooting a supernatural horror film, leading his estranged daughter to wonder if he's slipping back into his past addictions or if there's something more sinister at play.",
-    "popularity": 1187.125,
-    "poster_path": "/ar2h87jlTfMlrDZefR3VFz1SfgH.jpg",
-    "release_date": "2024-05-30",
-    "title": "The Exorcism",
-    "vote_average": 4.52,
-    "vote_count": 75
-  },
-  {
-    "id": 533535,
-    "media_type": "movie",
-    "genre_ids": [878, 28, 35],
-    "original_language": "en",
-    "overview": "A listless Wade Wilson toils away in civilian life with his days as the morally flexible mercenary, Deadpool, behind him. But when his homeworld faces an existential threat, Wade must reluctantly suit-up again with an even more reluctant Wolverine.",
-    "popularity": 849.864,
-    "poster_path": "/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-    "release_date": "2024-07-24",
-    "title": "Deadpool & Wolverine",
+    "original_name": "12 Angry Men",
+    "overview": "The defense and the prosecution have rested and the jury is filing into the jury room to decide if a young Spanish-American is guilty or innocent of murdering his father. What begins as an open and shut case soon becomes a mini-drama of each of the jurors' prejudices and preconceptions about the trial, the accused, and each other.",
+    "popularity": 78.205,
+    "release_date": "1957-04-10",
+    "status": "Released",
     "vote_average": 8.5,
-    "vote_count": 10
+    "budget": 397751,
+    "imdb_id": "tt0050083",
+    "revenue": 4360000,
+    "runtime": 97,
+    "watched": false
   },
   {
-    "id": 1001311,
-    "media_type": "movie",
-    "genre_ids": [53, 27, 28, 9648],
-    "original_language": "fr",
-    "overview": "In order to save Paris from an international bloodbath, a grieving scientist is forced to face her tragic past when a giant shark appears in the Seine.",
-    "popularity": 791.251,
-    "poster_path": "/qZPLK5ktRKa3CL4sKRZtj8UlPYc.jpg",
-    "release_date": "2024-06-04",
-    "title": "Under Paris",
-    "vote_average": 6.095,
-    "vote_count": 917
-  },
-  {
-    "id": 1191610,
-    "media_type": "movie",
-    "genre_ids": [18, 10749, 35],
-    "original_language": "es",
-    "overview": "A young autistic museum guide lives by a strict routine — until he falls in love with his coworker and must confront a whirlwind of new, intense emotions.",
-    "popularity": 796.256,
-    "poster_path": "/fCjC1RRbEJUpDjM55RNUMXQen0b.jpg",
-    "release_date": "2024-06-27",
-    "title": "Goyo",
-    "vote_average": 6.914,
-    "vote_count": 29
-  },
-  {
-    "id": 1174618,
-    "media_type": "movie",
-    "genre_ids": [27, 53],
-    "original_language": "en",
-    "overview": "A recently bereaved teenage girl goes to live with her aunt in a secluded woodland house, unaware that sinister forces lurk within.",
-    "popularity": 1059.296,
-    "poster_path": "/wJhn0GrakI4GFD1VBaZGn9afblN.jpg",
-    "release_date": "2023-12-26",
-    "title": "Alice in Terrorland",
-    "vote_average": 5.918,
-    "vote_count": 85
-  },
-  {
-    "id": 929590,
-    "media_type": "movie",
-    "genre_ids": [10752, 28, 18],
-    "original_language": "en",
-    "overview": "In the near future, a group of war journalists attempt to survive while reporting the truth as the United States stands on the brink of civil war.",
-    "popularity": 793.972,
-    "poster_path": "/sh7Rg8Er3tFcN9BpKIPOMvALgZd.jpg",
-    "release_date": "2024-04-10",
-    "title": "Civil War",
-    "vote_average": 6.989,
-    "vote_count": 1929
-  },
-  {
-    "id": 1159518,
-    "media_type": "movie",
-    "genre_ids": [28, 878, 27, 53],
-    "original_language": "en",
-    "overview": "Members of an elite security team deployed to rescue a VIP on an exclusive island.The rescue mission becomes a desperate attempt to survive, escape the island and elude the sinister presence that seeks to harm them.",
-    "popularity": 761.787,
-    "poster_path": "/snKpXexv5dtWqEKEmXrJtp8QGQC.jpg",
-    "release_date": "2023-11-03",
-    "title": "Black Noise",
-    "vote_average": 5.313,
-    "vote_count": 16
-  },
-  {
-    "id": 1114738,
-    "media_type": "movie",
-    "genre_ids": [28, 53],
-    "original_language": "en",
-    "overview": "After Police Chief Carter discovers the remains of eleven women, FBI Special Agent Petrovick is recruited to profile the serial killer responsible for the infamous \"boneyard\" killings. As the police force, narcotics agency, and FBI lock horns, a tangled web of intrigue turns everyone into a suspect.",
-    "popularity": 723.683,
-    "poster_path": "/xkNK36hQv8SWiwiQoE7naRfP0zL.jpg",
-    "release_date": "2024-07-05",
-    "title": "Boneyard",
-    "vote_average": 5.841,
-    "vote_count": 41
-  },
-  {
-    "id": 718821,
-    "media_type": "movie",
-    "genre_ids": [28, 12, 53],
-    "original_language": "en",
-    "overview": "As storm season intensifies, the paths of former storm chaser Kate Carter and reckless social-media superstar Tyler Owens collide when terrifying phenomena never seen before are unleashed. The pair and their competing teams find themselves squarely in the paths of multiple storm systems converging over central Oklahoma in the fight of their lives.",
-    "popularity": 771.648,
-    "poster_path": "/pjnD08FlMAIXsfOLKQbvmO0f0MD.jpg",
-    "release_date": "2024-07-10",
-    "title": "Twisters",
-    "vote_average": 7.385,
-    "vote_count": 130
-  },
-  {
-    "id": 150540,
-    "media_type": "movie",
-    "genre_ids": [16, 10751, 12, 18, 35],
-    "original_language": "en",
-    "overview": "When 11-year-old Riley moves to a new city, her Emotions team up to help her through the transition. Joy, Fear, Anger, Disgust and Sadness work together, but when Joy and Sadness get lost, they must journey through unfamiliar places to get back home.",
-    "popularity": 641.559,
-    "poster_path": "/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg",
-    "release_date": "2015-06-17",
-    "title": "Inside Out",
-    "vote_average": 7.916,
-    "vote_count": 21247
-  },
-  {
-    "id": 1011985,
-    "media_type": "movie",
-    "genre_ids": [16, 10751, 14],
-    "original_language": "en",
-    "overview": "Po is gearing up to become the spiritual leader of his Valley of Peace, but also needs someone to take his place as Dragon Warrior. As such, he will train a new kung fu practitioner for the spot and will encounter a villain called the Chameleon who conjures villains from the past.",
-    "popularity": 595.903,
-    "poster_path": "/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg",
-    "release_date": "2024-03-02",
-    "title": "Kung Fu Panda 4",
-    "vote_average": 7.138,
-    "vote_count": 2300
-  },
-  {
-    "id": 704673,
-    "media_type": "movie",
-    "genre_ids": [28, 80, 53],
-    "original_language": "en",
-    "overview": "A Special Forces commando uncovers a dangerous conspiracy when she returns to her hometown looking for answers into her beloved father's death.",
-    "popularity": 611.851,
-    "poster_path": "/lJN24nn28s5afC1UnLPYRgYOp1K.jpg",
-    "release_date": "2024-06-20",
-    "title": "Trigger Warning",
-    "vote_average": 5.843,
-    "vote_count": 334
-  },
-  {
-    "id": 762441,
-    "media_type": "movie",
-    "genre_ids": [27, 878, 53],
-    "original_language": "en",
-    "overview": "As New York City is invaded by alien creatures who hunt by sound, a woman named Sam fights to survive with her cat.",
-    "popularity": 652.688,
-    "poster_path": "/yrpPYKijwdMHyTGIOd1iK1h0Xno.jpg",
-    "release_date": "2024-06-26",
-    "title": "A Quiet Place: Day One",
-    "vote_average": 6.914,
-    "vote_count": 450
-  },
-  {
-    "id": 1207898,
-    "media_type": "movie",
-    "genre_ids": [27],
-    "original_language": "en",
-    "overview": "When a creepy Jack-in-the-Box is discovered and opened on the grounds of an exclusive girls' school, six brave students soon enter a fight to the finish against the unleashed demon.",
-    "popularity": 667.439,
-    "poster_path": "/oDVjlCTSyF6Fh8Fpm683MyGGnSG.jpg",
-    "release_date": "2024-01-18",
-    "title": "The Jack in the Box: Rises",
-    "vote_average": 7,
-    "vote_count": 56
-  },
-  {
-    "id": 1010581,
-    "media_type": "movie",
-    "genre_ids": [18, 10749],
-    "original_language": "es",
-    "overview": "Noah must leave her city, boyfriend, and friends to move into William Leister's mansion, the flashy and wealthy husband of her mother Rafaela. As a proud and independent 17 year old, Noah resists living in a mansion surrounded by luxury. However, it is there where she meets Nick, her new stepbrother, and the clash of their strong personalities becomes evident from the very beginning.",
-    "popularity": 385.939,
-    "poster_path": "/w46Vw536HwNnEzOa7J24YH9DPRS.jpg",
-    "release_date": "2023-06-08",
-    "title": "My Fault",
-    "vote_average": 7.971,
-    "vote_count": 2709
-  },
-  {
-    "id": 1143019,
-    "media_type": "movie",
-    "genre_ids": [35, 28],
-    "original_language": "fr",
-    "overview": "When a gang of robbers provokes chaos in Paris and humiliates the police, the Minister of the Interior wants new blood at the helm of the investigation: Alia is from Marseille, fiery-tempered and unmanageable, Hugo is Parisian, valedictorian and meticulous. In short, they have every reason to hate each other. A forced alliance, for better or for worse, or maybe blossoming into something else?",
-    "popularity": 579.885,
-    "poster_path": "/7PoIAvL3Io5v0HyBliXfXZruQTi.jpg",
-    "release_date": "2024-06-20",
-    "title": "The Infallibles",
-    "vote_average": 5.921,
-    "vote_count": 63
-  },
-  {
-    "id": 1016346,
-    "media_type": "movie",
-    "genre_ids": [28, 18, 53],
-    "original_language": "bn",
-    "overview": "Masud Rana is a Secret Agent with code name MR-9 of the Bangladesh Counter Intelligence Agency",
-    "popularity": 578.483,
-    "poster_path": "/29nqVPNFnB9ZxriApsIrFiteBa6.jpg",
-    "release_date": "2023-08-25",
-    "title": "MR-9: Do or Die",
-    "vote_average": 6.45,
-    "vote_count": 120
-  },
-  {
-    "id": 1214509,
-    "media_type": "movie",
-    "genre_ids": [27, 53],
-    "original_language": "en",
-    "overview": "The enigmatic resurrection, rampage, and retribution of an undead monster in a remote wilderness unleashes an iconic new killer after a locket is removed from a collapsed fire tower that entombed its rotting corpse.",
-    "popularity": 591.922,
-    "poster_path": "/hPfWHgq07nXbeldwEGxWB4JqwtE.jpg",
-    "release_date": "2024-05-31",
-    "title": "In a Violent Nature",
-    "vote_average": 5.803,
-    "vote_count": 117
-  },
-  {
-    "id": 1115623,
-    "media_type": "movie",
-    "genre_ids": [28],
-    "original_language": "en",
-    "overview": "When Karate champion Michael Rivers wins the last tournament of his career, shady businessman Ron Hall offers him the opportunity to fight in an illegal Kumite in Bulgaria against the world’s best martial artists.  When Michael declines, Hall has his daughter kidnapped and, in order to rescue her, Rivers is left with no choice but to compete in the deadly tournament. Arriving in Bulgaria, he finds out that he is not the only fighter whose loved one was taken. Rivers enlists the help of trainers Master Loren, and Julie Jackson but will it be enough for him to win the tournament and save his daughter’s life?",
-    "popularity": 505.881,
-    "poster_path": "/zDkaJgsPoSqa2cMe2hW2HAfyWwO.jpg",
-    "release_date": "2024-05-09",
-    "title": "The Last Kumite",
-    "vote_average": 7.081,
-    "vote_count": 80
-  },
-  {
-    "id": 959098,
-    "media_type": "movie",
-    "genre_ids": [12, 10751],
-    "original_language": "fr",
-    "overview": "Grown up in the Amazon rainforest, Autumn lives with Hope, the cute baby jaguar she adopted. However, a circumstance forces Autumn to return to New York. Autumn goes back into the jungle to save Hope from grave danger.",
-    "popularity": 494.375,
-    "poster_path": "/ocHu00nOZzK0m9BsFdrFg3SglS0.jpg",
-    "release_date": "2024-02-01",
-    "title": "Autumn and the Black Jaguar",
-    "vote_average": 5.554,
-    "vote_count": 29
-  },
-  {
-    "id": 508883,
-    "media_type": "movie",
-    "genre_ids": [16, 12, 14],
+    "id": 129,
+    "name": "Spirited Away",
+    "type": "movie",
+    "poster_path": "/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+    "genres": [
+      {
+        "id": 16,
+        "name": "Animation"
+      },
+      {
+        "id": 10751,
+        "name": "Family"
+      },
+      {
+        "id": 14,
+        "name": "Fantasy"
+      }
+    ],
+    "origin_country": ["JP"],
     "original_language": "ja",
-    "overview": "While the Second World War rages, the teenage Mahito, haunted by his mother's tragic death, is relocated from Tokyo to the serene rural home of his new stepmother Natsuko, a woman who bears a striking resemblance to the boy's mother. As he tries to adjust, this strange new world grows even stranger following the appearance of a persistent gray heron, who perplexes and bedevils Mahito, dubbing him the \"long-awaited one.\"",
-    "popularity": 288.221,
-    "poster_path": "/f4oZTcfGrVTXKTWg157AwikXqmP.jpg",
-    "release_date": "2023-07-14",
-    "title": "The Boy and the Heron",
-    "vote_average": 7.517,
-    "vote_count": 1464
+    "original_name": "千と千尋の神隠し",
+    "overview": "A young girl, Chihiro, becomes trapped in a strange new world of spirits. When her parents undergo a mysterious transformation, she must call upon the courage she never knew she had to free her family.",
+    "popularity": 164.106,
+    "release_date": "2001-04-18",
+    "status": "Released",
+    "vote_average": 8.537,
+    "budget": 19000000,
+    "imdb_id": "tt0245429",
+    "revenue": 274925095,
+    "runtime": 125,
+    "watched": false
   },
   {
-    "id": 955555,
-    "media_type": "movie",
-    "genre_ids": [28, 80, 35, 53],
+    "id": 19404,
+    "name": "Dilwale Dulhania Le Jayenge",
+    "type": "movie",
+    "poster_path": "/lfRkUr7DYdHldAqi3PwdQGBRBPM.jpg",
+    "genres": [
+      {
+        "id": 35,
+        "name": "Comedy"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 10749,
+        "name": "Romance"
+      }
+    ],
+    "origin_country": ["IN"],
+    "original_language": "hi",
+    "original_name": "दिलवाले दुल्हनिया ले जायेंगे",
+    "overview": "Raj is a rich, carefree, happy-go-lucky second generation NRI. Simran is the daughter of Chaudhary Baldev Singh, who in spite of being an NRI is very strict about adherence to Indian values. Simran has left for India to be married to her childhood fiancé. Raj leaves for India with a mission at his hands, to claim his lady love under the noses of her whole family. Thus begins a saga.",
+    "popularity": 60.398,
+    "release_date": "1995-10-20",
+    "status": "Released",
+    "vote_average": 8.536,
+    "budget": 13200000,
+    "imdb_id": "tt0112870",
+    "revenue": 100000000,
+    "runtime": 190,
+    "watched": false
+  },
+  {
+    "id": 155,
+    "name": "The Dark Knight",
+    "type": "movie",
+    "poster_path": "/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 28,
+        "name": "Action"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      },
+      {
+        "id": 53,
+        "name": "Thriller"
+      }
+    ],
+    "origin_country": ["US"],
+    "original_language": "en",
+    "original_name": "The Dark Knight",
+    "overview": "Batman raises the stakes in his war on crime. With the help of Lt. Jim Gordon and District Attorney Harvey Dent, Batman sets out to dismantle the remaining criminal organizations that plague the streets. The partnership proves to be effective, but they soon find themselves prey to a reign of chaos unleashed by a rising criminal mastermind known to the terrified citizens of Gotham as the Joker.",
+    "popularity": 169.679,
+    "release_date": "2008-07-16",
+    "status": "Released",
+    "vote_average": 8.517,
+    "budget": 185000000,
+    "imdb_id": "tt0468569",
+    "revenue": 1004558444,
+    "runtime": 152,
+    "watched": false
+  },
+  {
+    "id": 496243,
+    "name": "Parasite",
+    "type": "movie",
+    "poster_path": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+    "genres": [
+      {
+        "id": 35,
+        "name": "Comedy"
+      },
+      {
+        "id": 53,
+        "name": "Thriller"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "origin_country": ["KR"],
     "original_language": "ko",
-    "overview": "Detective Ma Seok-do changes his affiliation from the Geumcheon Police Station to the Metropolitan Investigation Team, in order to eradicate Japanese gangsters who enter Korea to commit heinous crimes.",
-    "popularity": 461.465,
-    "poster_path": "/lW6IHrtaATxDKYVYoQGU5sh0OVm.jpg",
-    "release_date": "2023-05-31",
-    "title": "The Roundup: No Way Out",
-    "vote_average": 7.27,
-    "vote_count": 369
+    "original_name": "기생충",
+    "overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
+    "popularity": 179.115,
+    "release_date": "2019-05-30",
+    "status": "Released",
+    "vote_average": 8.509,
+    "budget": 11363000,
+    "imdb_id": "tt6751668",
+    "revenue": 257591776,
+    "runtime": 133,
+    "watched": false
   },
   {
-    "id": 7451,
-    "media_type": "movie",
-    "genre_ids": [28, 12, 53, 80],
+    "id": 497,
+    "name": "The Green Mile",
+    "type": "movie",
+    "poster_path": "/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg",
+    "genres": [
+      {
+        "id": 14,
+        "name": "Fantasy"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Xander Cage is your standard adrenaline junkie with no fear and a lousy attitude. When the US Government \"recruits\" him to go on a mission, he's not exactly thrilled. His mission: to gather information on an organization that may just be planning the destruction of the world, led by the nihilistic Yorgi.",
-    "popularity": 438.996,
-    "poster_path": "/xeEw3eLeSFmJgXZzmF2Efww0q3s.jpg",
-    "release_date": "2002-08-09",
-    "title": "xXx",
-    "vote_average": 5.9,
-    "vote_count": 4120
+    "original_name": "The Green Mile",
+    "overview": "A supernatural tale set on death row in a Southern prison, where gentle giant John Coffey possesses the mysterious power to heal people's ailments. When the cell block's head guard, Paul Edgecomb, recognizes Coffey's miraculous gift, he tries desperately to help stave off the condemned man's execution.",
+    "popularity": 95.673,
+    "release_date": "1999-12-10",
+    "status": "Released",
+    "vote_average": 8.506,
+    "budget": 60000000,
+    "imdb_id": "tt0120689",
+    "revenue": 286801374,
+    "runtime": 189,
+    "watched": false
   },
   {
-    "id": 932086,
-    "media_type": "movie",
-    "genre_ids": [37, 18],
+    "id": 372058,
+    "name": "Your Name.",
+    "type": "movie",
+    "poster_path": "/q719jXXEzOoYaps6babgKnONONX.jpg",
+    "genres": [
+      {
+        "id": 16,
+        "name": "Animation"
+      },
+      {
+        "id": 10749,
+        "name": "Romance"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "origin_country": ["JP"],
+    "original_language": "ja",
+    "original_name": "君の名は。",
+    "overview": "High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki’s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.",
+    "popularity": 124.545,
+    "release_date": "2016-08-26",
+    "status": "Released",
+    "vote_average": 8.489,
+    "budget": 0,
+    "imdb_id": "tt5311514",
+    "revenue": 358000000,
+    "runtime": 106,
+    "watched": false
+  },
+  {
+    "id": 680,
+    "name": "Pulp Fiction",
+    "type": "movie",
+    "poster_path": "/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    "genres": [
+      {
+        "id": 53,
+        "name": "Thriller"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Follow the story of how the Old West was won—and lost—through the blood, sweat and tears of many. Spanning 15 years before, during and following the Civil War from 1859 to 1874, embark on an emotional journey across a country at war with itself, experienced through the lens of families, friends and foes all attempting to discover what it truly means to be the United States of America.",
-    "popularity": 515.866,
-    "poster_path": "/hqDkO0W9uk4aiwzn3pTeLO7NPZD.jpg",
-    "release_date": "2024-06-26",
-    "title": "Horizon: An American Saga - Chapter 1",
-    "vote_average": 7.024,
-    "vote_count": 104
+    "original_name": "Pulp Fiction",
+    "overview": "A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three stories that ingeniously trip back and forth in time.",
+    "popularity": 128.54,
+    "release_date": "1994-09-10",
+    "status": "Released",
+    "vote_average": 8.487,
+    "budget": 8500000,
+    "imdb_id": "tt0110912",
+    "revenue": 213928762,
+    "runtime": 154,
+    "watched": false
   },
   {
-    "id": 693134,
-    "media_type": "movie",
-    "genre_ids": [878, 12],
+    "id": 122,
+    "name": "The Lord of the Rings: The Return of the King",
+    "type": "movie",
+    "poster_path": "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
+    "genres": [
+      {
+        "id": 12,
+        "name": "Adventure"
+      },
+      {
+        "id": 14,
+        "name": "Fantasy"
+      },
+      {
+        "id": 28,
+        "name": "Action"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.",
-    "popularity": 382.953,
-    "poster_path": "/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
-    "release_date": "2024-02-27",
-    "title": "Dune: Part Two",
-    "vote_average": 8.166,
-    "vote_count": 4866
+    "original_name": "The Lord of the Rings: The Return of the King",
+    "overview": "As armies mass for a final battle that will decide the fate of the world--and powerful, ancient forces of Light and Dark compete to determine the outcome--one member of the Fellowship of the Ring is revealed as the noble heir to the throne of the Kings of Men. Yet, the sole hope for triumph over evil lies with a brave hobbit, Frodo, who, accompanied by his loyal friend Sam and the hideous, wretched Gollum, ventures deep into the very dark heart of Mordor on his seemingly impossible quest to destroy the Ring of Power.​",
+    "popularity": 169.118,
+    "release_date": "2003-12-01",
+    "status": "Released",
+    "vote_average": 8.482,
+    "budget": 94000000,
+    "imdb_id": "tt0167260",
+    "revenue": 1118888979,
+    "runtime": 201,
+    "watched": false
   },
   {
-    "id": 746036,
-    "media_type": "movie",
-    "genre_ids": [28, 35],
+    "id": 13,
+    "name": "Forrest Gump",
+    "type": "movie",
+    "poster_path": "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+    "genres": [
+      {
+        "id": 35,
+        "name": "Comedy"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 10749,
+        "name": "Romance"
+      }
+    ],
+    "origin_country": ["US"],
     "original_language": "en",
-    "overview": "Fresh off an almost career-ending accident, stuntman Colt Seavers has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job.",
-    "popularity": 441.258,
-    "poster_path": "/tSz1qsmSJon0rqjHBxXZmrotuse.jpg",
-    "release_date": "2024-04-24",
-    "title": "The Fall Guy",
-    "vote_average": 7.233,
-    "vote_count": 1591
+    "original_name": "Forrest Gump",
+    "overview": "A man with a low IQ has accomplished great things in his life and been present during significant historic events—in each case, far exceeding what anyone imagined he could do. But despite all he has achieved, his one true love eludes him.",
+    "popularity": 131.235,
+    "release_date": "1994-06-23",
+    "status": "Released",
+    "vote_average": 8.476,
+    "budget": 55000000,
+    "imdb_id": "tt0109830",
+    "revenue": 677387716,
+    "runtime": 142,
+    "watched": false
   },
   {
-    "id": 639720,
-    "media_type": "movie",
-    "genre_ids": [35, 14, 10751],
-    "original_language": "en",
-    "overview": "A young girl who goes through a difficult experience begins to see everyone's imaginary friends who have been left behind as their real-life friends have grown up.",
-    "popularity": 439.186,
-    "poster_path": "/xbKFv4KF3sVYuWKllLlwWDmuZP7.jpg",
-    "release_date": "2024-05-08",
-    "title": "IF",
-    "vote_average": 7.371,
-    "vote_count": 662
-  },
-  {
-    "id": 1219685,
-    "media_type": "movie",
-    "genre_ids": [18, 10770],
+    "id": 1084736,
+    "name": "The Count of Monte-Cristo",
+    "type": "movie",
+    "poster_path": "/aHRUsFln97FlIdsvYKFT3z5ubYE.jpg",
+    "genres": [
+      {
+        "id": 12,
+        "name": "Adventure"
+      },
+      {
+        "id": 36,
+        "name": "History"
+      },
+      {
+        "id": 28,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 10749,
+        "name": "Romance"
+      },
+      {
+        "id": 53,
+        "name": "Thriller"
+      }
+    ],
+    "origin_country": ["FR"],
     "original_language": "fr",
-    "overview": "Michel, the jovial owner of the only café in a small Normandy town, sees his life turned upside down when his teenage daughter is murdered. The community has his back but soon rumor spreads and Michel is singled out. From the ideal father, he becomes the ideal culprit.",
-    "popularity": 461.513,
-    "poster_path": "/4xJd3uwtL1vCuZgEfEc8JXI9Uyx.jpg",
-    "release_date": "2024-04-21",
-    "title": "An Ideal Father",
-    "vote_average": 6.4,
-    "vote_count": 61
+    "original_name": "Le Comte de Monte-Cristo",
+    "overview": "Edmond Dantes becomes the target of a sinister plot and is arrested on his wedding day for a crime he did not commit. After 14 years in the island prison of Château d’If, he manages a daring escape. Now rich beyond his dreams, he assumes the identity of the Count of Monte-Cristo and exacts his revenge on the three men who betrayed him.",
+    "popularity": 55.773,
+    "release_date": "2024-06-28",
+    "status": "Released",
+    "vote_average": 8.452,
+    "budget": 46700000,
+    "imdb_id": "tt26446278",
+    "revenue": 17197070,
+    "runtime": 178,
+    "watched": false
+  },
+  {
+    "id": 429,
+    "name": "The Good, the Bad and the Ugly",
+    "type": "movie",
+    "poster_path": "/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg",
+    "genres": [
+      {
+        "id": 37,
+        "name": "Western"
+      }
+    ],
+    "origin_country": ["IT"],
+    "original_language": "it",
+    "original_name": "Il buono, il brutto, il cattivo",
+    "overview": "While the Civil War rages on between the Union and the Confederacy, three men – a quiet loner, a ruthless hitman, and a Mexican bandit – comb the American Southwest in search of a strongbox containing $200,000 in stolen gold.",
+    "popularity": 124.407,
+    "release_date": "1966-12-22",
+    "status": "Released",
+    "vote_average": 8.465,
+    "budget": 1200000,
+    "imdb_id": "tt0060196",
+    "revenue": 38900000,
+    "runtime": 161,
+    "watched": false
+  },
+  {
+    "id": 769,
+    "name": "GoodFellas",
+    "type": "movie",
+    "poster_path": "/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 80,
+        "name": "Crime"
+      }
+    ],
+    "origin_country": ["US"],
+    "original_language": "en",
+    "original_name": "GoodFellas",
+    "overview": "The true story of Henry Hill, a half-Irish, half-Sicilian Brooklyn kid who is adopted by neighbourhood gangsters at an early age and climbs the ranks of a Mafia family under the guidance of Jimmy Conway.",
+    "popularity": 103.026,
+    "release_date": "1990-09-12",
+    "status": "Released",
+    "vote_average": 8.464,
+    "budget": 25000000,
+    "imdb_id": "tt0099685",
+    "revenue": 46800000,
+    "runtime": 145,
+    "watched": false
+  },
+  {
+    "id": 346,
+    "name": "Seven Samurai",
+    "type": "movie",
+    "poster_path": "/8OKmBV5BUFzmozIC3pPWKHy17kx.jpg",
+    "genres": [
+      {
+        "id": 28,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "origin_country": ["JP"],
+    "original_language": "ja",
+    "original_name": "七人の侍",
+    "overview": "A samurai answers a village's request for protection after he falls on hard times. The town needs protection from bandits, so the samurai gathers six others to help him teach the people how to defend themselves, and the villagers provide the soldiers with food.",
+    "popularity": 55.392,
+    "release_date": "1954-04-26",
+    "status": "Released",
+    "vote_average": 8.46,
+    "budget": 2000000,
+    "imdb_id": "tt0047478",
+    "revenue": 365258,
+    "runtime": 207,
+    "watched": false
+  },
+  {
+    "id": 667257,
+    "name": "Impossible Things",
+    "type": "movie",
+    "poster_path": "/t2Ew8NZ8Ci2kqmoecZUNQUFDJnQ.jpg",
+    "genres": [
+      {
+        "id": 10751,
+        "name": "Family"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "origin_country": ["MX"],
+    "original_language": "es",
+    "original_name": "Cosas imposibles",
+    "overview": "After the death of her abusive husband, Matilde finds her new best friend in Miguel, her young, insecure, and disoriented neighbor.",
+    "popularity": 24.295,
+    "release_date": "2021-06-17",
+    "status": "Released",
+    "vote_average": 8.458,
+    "budget": 0,
+    "imdb_id": "tt10032342",
+    "revenue": 0,
+    "runtime": 88,
+    "watched": false
+  },
+  {
+    "id": 12477,
+    "name": "Grave of the Fireflies",
+    "type": "movie",
+    "poster_path": "/k9tv1rXZbOhH7eiCk378x61kNQ1.jpg",
+    "genres": [
+      {
+        "id": 16,
+        "name": "Animation"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      },
+      {
+        "id": 10752,
+        "name": "War"
+      }
+    ],
+    "origin_country": ["JP"],
+    "original_language": "ja",
+    "original_name": "火垂るの墓",
+    "overview": "In the final months of World War II, 14-year-old Seita and his sister Setsuko are orphaned when their mother is killed during an air raid in Kobe, Japan. After a falling out with their aunt, they move into an abandoned bomb shelter. With no surviving relatives and their emergency rations depleted, Seita and Setsuko struggle to survive.",
+    "popularity": 0.053,
+    "release_date": "1988-04-16",
+    "status": "Released",
+    "vote_average": 8.458,
+    "budget": 3700000,
+    "imdb_id": "tt0095327",
+    "revenue": 516962,
+    "runtime": 89,
+    "watched": false
   }
 ]

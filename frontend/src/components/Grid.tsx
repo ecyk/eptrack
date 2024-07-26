@@ -41,7 +41,7 @@ function Item({ media, onClick }: ItemProps) {
         </Skeleton>
         {
           <figcaption>
-            {media?.title ?? <Skeleton className={styles["skeleton-line"]} />}
+            {media?.name ?? <Skeleton className={styles["skeleton-line"]} />}
           </figcaption>
         }
       </button>
@@ -123,8 +123,8 @@ function Grid() {
       {modalIsOpen && (
         <DetailModal
           tags={[
-            { text: "Watched", checked: false },
-            { text: "Watching", checked: false },
+            { text: "Watched", name: "tag-1", checked: false },
+            { text: "Watching", name: "tag-2", checked: false },
           ]}
           media={details.data!}
           onSave={(dropdowns) => console.log(dropdowns)}

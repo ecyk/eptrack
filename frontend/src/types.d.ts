@@ -1,30 +1,53 @@
-interface Episode {
+interface Media {
+  id: number;
   name: string;
+  type: string;
+  poster_path: string;
+}
+
+interface MediaDetail extends Media {
+  genres: { id: number; name: string }[];
+  origin_country: string[];
+  original_language: string;
+  original_name: string;
+  overview: string;
+  popularity: number;
+  release_date: string;
+  status: string;
+  vote_average: number;
+}
+
+interface MovieDetail extends MediaDetail {
+  budget: number;
+  imdb_id: string;
+  revenue: number;
+  runtime: number;
+  watched: boolean;
+}
+
+interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  runtime: number | null;
+  air_date: string;
+  vote_average: number;
   watched: boolean;
 }
 
 interface Season {
+  id: number;
   name: string;
+  overview: string;
+  air_date: string | null;
+  vote_average: number;
   episodes: Episode[];
 }
 
-interface Media {
-  id: number;
-  media_type: string;
-  genre_ids: number[];
-  original_language: string;
-  poster_path: string;
-  title: string;
-  tag_ids?: number[];
-}
-
-interface MediaDetail extends Media {
-  overview: string;
-  popularity: number;
-  release_date: string;
-  vote_average: number;
-  vote_count: number;
-  seasons?: Season[];
+interface ShowDetail extends MediaDetail {
+  in_production: boolean;
+  last_air_date: string;
+  seasons: Season[];
 }
 
 interface ItemsResponse {

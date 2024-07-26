@@ -4,6 +4,7 @@ import styles from "./Dropdown.module.css";
 
 export interface DropdownItem {
   text: string;
+  name: string;
   checked: boolean;
 }
 
@@ -25,19 +26,19 @@ function Dropdown({
   return (
     <details
       className={classNames("dropdown", {
-        [styles.inline]: inline,
+        [styles.inline]: inline ?? false,
       })}
-      open={initialOpen}
+      open={initialOpen ?? false}
     >
       <summary>{text}</summary>
       {
         <ul>
-          {items.map(({ text, checked }, index) => (
+          {items.map(({ text, name, checked }, index) => (
             <li key={index}>
               <label>
                 <input
                   type="checkbox"
-                  id={`checkbox-${index}`}
+                  name={name}
                   checked={checked}
                   onChange={() => onChange && onChange(index)}
                 />
