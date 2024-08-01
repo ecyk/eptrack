@@ -1,11 +1,24 @@
-import { app } from "./app";
-import logger from "./logger";
+import { type Server, type IncomingMessage, type ServerResponse } from "http";
 
-const port = process.env.PORT ?? 3000;
+import mongoose from "mongoose";
 
-const server = app.listen(port, () => {
-  logger.info(`Server listening on port ${port}`);
-});
+import app from "./app.js";
+import config from "./config.js";
+import logger from "./logger.js";
+
+if (config.env === "development") {
+  mongoose.set("debug", true);
+}
+
+let server: Server<typeof IncomingMessage, typeof ServerResponse>;
+mongoose
+  .connect(config.mongoose.url)
+  .then(() => {
+    server = app.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
+    });
+  })
+  .catch(logger.error);
 
 const unexpectedErrorHandler = (err: Error): void => {
   logger.error(err);

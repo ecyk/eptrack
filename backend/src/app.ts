@@ -1,24 +1,25 @@
 import compression from "compression";
 import cors from "cors";
-import express from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import helmet from "helmet";
-import passport from "passport";
-import pinoHttp from "pino-http";
+import status from "http-status";
+import { pinoHttp } from "pino-http";
 
-import jwtStrategy from "./api/v1/auth/auth-strategy";
-import routes from "./api/v1/routes";
-import connectDB from "./db";
-import { notFoundHandler, errorHandler } from "./handlers";
-import logger from "./logger";
-import { env } from "./vars";
+import routes from "./api/v1/routes.js";
+import { AppError } from "./app-error.js";
+import config from "./config.js";
+import { errorConverter, errorHandler } from "./error-handlers.js";
+import logger from "./logger.js";
 
-connectDB();
-
-export const app = express();
+const app = express();
 
 app.set("trust proxy", true);
 
-if (env === "development") {
+if (config.env === "development") {
   app.use(pinoHttp({ logger }));
 }
 app.use(helmet());
@@ -28,10 +29,12 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
-app.use(passport.initialize());
-passport.use("jwt", jwtStrategy);
-
 app.use("/api/v1", routes);
 
-app.use(notFoundHandler);
+app.use((_req: Request, _res: Response, next: NextFunction) => {
+  next(new AppError(status.NOT_FOUND, status[status.NOT_FOUND]));
+});
+app.use(errorConverter);
 app.use(errorHandler);
+
+export default app;

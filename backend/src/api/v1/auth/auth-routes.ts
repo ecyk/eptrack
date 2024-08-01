@@ -1,24 +1,25 @@
 import { Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 
-import { login, register, resetPassword } from "./auth-handlers";
-import {
-  loginSchema,
-  registerSchema,
-  passwordResetSchema,
-} from "./auth-validates";
-import { validate } from "../../../handlers";
+import { authGoogle, authGoogleCallback } from "./auth-handlers.js";
+import config from "../../../config.js";
+import rateLimit from "express-rate-limit";
 
 const authRouter = Router();
 
-authRouter
-  .route("/login")
-  .post(validate(loginSchema), expressAsyncHandler(login));
-authRouter
-  .route("/register")
-  .post(validate(registerSchema), expressAsyncHandler(register));
-authRouter
-  .route("/reset")
-  .post(validate(passwordResetSchema), expressAsyncHandler(resetPassword));
+if (config.env === "production") {
+  authRouter.use(
+    "/",
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 20,
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+    })
+  );
+}
+
+authRouter.route("/google").get(expressAsyncHandler(authGoogle));
+authRouter.route("/google/callback").get(expressAsyncHandler(authGoogleCallback));
 
 export default authRouter;

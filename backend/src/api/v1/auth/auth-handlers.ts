@@ -1,83 +1,114 @@
-import argon2 from "argon2";
+import { generateCodeVerifier, generateState } from "arctic";
 import { type Request, type Response, type NextFunction } from "express";
-import { CONFLICT, CREATED, OK, UNAUTHORIZED } from "http-status";
-import jwt from "jsonwebtoken";
+import status from "http-status";
+import { generateId } from "lucia";
+import { parseCookies, serializeCookie } from "oslo/cookie";
 
-import { AppError } from "../../../app-error";
-import { jwtSecret } from "../../../vars";
-import userModel from "../user/user-model";
+import { userModel } from "./auth-model.js";
+import { lucia, google } from "./auth-strategy.js";
+import { AppError } from "../../../app-error.js";
+import config from "../../../config.js";
 
-// eslint-disable-next-line
-async function verifyUser(username: string, password: string) {
-  const user = await userModel.findOne({ username }).exec();
-  if (user == null || !(await argon2.verify(user.hashedPassword, password))) {
-    throw new AppError(UNAUTHORIZED, "Invaild username or password");
-  }
-  return user;
-}
-
-export async function login(
+export async function authGoogle(
   req: Request,
   res: Response,
   _next: NextFunction
 ): Promise<void> {
-  const { username, password } = req.body as {
-    username: string;
-    password: string;
-  };
-
-  const user = await verifyUser(username, password);
-
-  res.status(OK).send({
-    code: OK,
-    token: jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: "1h" }),
+  const state = generateState();
+  const codeVerifier = generateCodeVerifier();
+  const url = await google.createAuthorizationURL(state, codeVerifier, {
+    scopes: ["profile", "email"],
   });
+  res
+    .append(
+      "Set-Cookie",
+      serializeCookie("google_oauth_state", state, {
+        path: "/",
+        secure: config.env === "production",
+        httpOnly: true,
+        maxAge: 60 * 10,
+        sameSite: "lax",
+      })
+    )
+    .append(
+      "Set-Cookie",
+      serializeCookie("google_code_verifier", codeVerifier, {
+        path: "/",
+        secure: config.env === "production",
+        httpOnly: true,
+        maxAge: 60 * 10,
+        sameSite: "lax",
+      })
+    )
+    .redirect(url.toString());
 }
 
-export async function register(
+export async function authGoogleCallback(
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): Promise<void> {
-  const { username, password } = req.body as {
-    username: string;
-    password: string;
-  };
+  const state = req.query.state?.toString() ?? null;
+  const code = req.query.code?.toString() ?? null;
+  const cookies = parseCookies(req.headers.cookie ?? "");
+  const storedState = cookies.get("google_oauth_state") ?? null;
+  const storedCodeVerifier = cookies.get("google_code_verifier") ?? null;
+  if (
+    state == null ||
+    code == null ||
+    storedState == null ||
+    storedCodeVerifier == null ||
+    state !== storedState
+  ) {
+    throw new AppError(status.BAD_REQUEST, status[status.BAD_REQUEST]);
+  }
 
-  const hashedPassword = await argon2.hash(password);
-  try {
-    await userModel.create({ username, hashedPassword });
-  } catch (err: any) {
-    if (err.code === 11000) {
-      throw new AppError(CONFLICT, "User already exists");
+  const tokens = await google.validateAuthorizationCode(
+    code,
+    storedCodeVerifier
+  );
+  const googleUserResponse = await fetch(
+    "https://openidconnect.googleapis.com/v1/userinfo",
+    {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
     }
-    next(err);
+  );
+  const googleUser = (await googleUserResponse.json()) as GoogleUser;
+  const existingUser = await userModel
+    .findOne({ google_id: googleUser.sub })
+    .exec();
+  if (existingUser != null) {
+    const session = await lucia.createSession(existingUser._id as string, {});
+    res
+      .append("Set-Cookie", lucia.createSessionCookie(session.id).serialize())
+      .redirect("/");
     return;
   }
 
-  res.status(CREATED).send({
-    code: CREATED,
-    message: "User registered successfully",
+  const userId = generateId(15);
+  await userModel.create({
+    _id: userId,
+    google_id: googleUser.sub,
+    given_name: googleUser.given_name,
+    family_name: googleUser.family_name,
+    picture: googleUser.picture,
+    email: googleUser.email,
+    email_verified: googleUser.email_verified,
   });
+
+  const session = await lucia.createSession(userId, {});
+  res
+    .append("Set-Cookie", lucia.createSessionCookie(session.id).serialize())
+    .redirect("/");
 }
 
-export async function resetPassword(
-  req: Request,
-  res: Response,
-  _next: NextFunction
-): Promise<void> {
-  const { username, password, newPassword } = req.body as {
-    username: string;
-    password: string;
-    newPassword: string;
-  };
-
-  const user = await verifyUser(username, password);
-  user.hashedPassword = await argon2.hash(newPassword);
-  await user.save();
-
-  res.status(OK).send({
-    code: OK,
-    message: "Password changed successfully",
-  });
+interface GoogleUser {
+  sub: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
 }
