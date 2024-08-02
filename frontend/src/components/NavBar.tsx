@@ -1,9 +1,12 @@
 import classNames from "classnames";
 
+import { useAuth } from "../contexts/AuthContext";
 import ColorSchemeSwitcher from "./ColorSchemeSwitcher";
 import styles from "./NavBar.module.css";
 
 function NavBar() {
+  const { isAuthenticated, signIn, signOut } = useAuth();
+
   return (
     <nav>
       <ul>
@@ -18,7 +21,14 @@ function NavBar() {
           <ColorSchemeSwitcher
             className={classNames("contrast", styles["theme-switcher"])}
           />
-          <a href="#">Sign in</a>
+          <button
+            className={classNames("outline", "contrast")}
+            onClick={() => {
+              isAuthenticated ? signOut() : signIn();
+            }}
+          >
+            {(isAuthenticated && "Sign out") || "Sign in with Google"}
+          </button>
         </li>
       </ul>
     </nav>

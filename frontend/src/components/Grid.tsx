@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { fetchDetail, fetchItems } from "../api";
-import useModal from "../contexts/useModal";
+import { useModal } from "../contexts/ModalContext";
 import DetailModal from "./DetailModal";
 import styles from "./Grid.module.css";
 

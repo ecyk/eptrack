@@ -14,10 +14,11 @@ import { AppError } from "./app-error.js";
 import config from "./config.js";
 import { errorConverter, errorHandler } from "./error-handlers.js";
 import logger from "./logger.js";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 
 if (config.env === "development") {
   app.use(pinoHttp({ logger }));
@@ -28,6 +29,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(cors());
 app.options("*", cors());
+
+if (config.env === "production") {
+  app.use(
+    "/api/v1/auth",
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 10,
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+    })
+  );
+}
 
 app.use("/api/v1", routes);
 

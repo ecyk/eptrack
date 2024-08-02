@@ -10,8 +10,9 @@ import ReactDOM from "react-dom/client";
 import toast from "react-hot-toast";
 
 import App from "./App.tsx";
-import ModalProvider from "./contexts/ModalProvider.tsx";
-import ThemeProvider from "./contexts/ThemeProvider.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { ModalProvider } from "./contexts/ModalContext.tsx";
+import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -32,11 +33,13 @@ void enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
-        </QueryClientProvider>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <ModalProvider>
+              <App />
+            </ModalProvider>
+          </QueryClientProvider>
+        </AuthProvider>
       </ThemeProvider>
     </React.StrictMode>
   );

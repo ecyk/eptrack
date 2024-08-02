@@ -1,7 +1,7 @@
 import { generateCodeVerifier, generateState } from "arctic";
 import { type Request, type Response, type NextFunction } from "express";
 import status from "http-status";
-import { generateId } from "lucia";
+import { Cookie, CookieAttributes, generateId, Session } from "lucia";
 import { parseCookies, serializeCookie } from "oslo/cookie";
 
 import { userModel } from "./auth-model.js";
@@ -43,6 +43,15 @@ export async function authGoogle(
     .redirect(url.toString());
 }
 
+interface GoogleUser {
+  sub: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+}
+
 export async function authGoogleCallback(
   req: Request,
   res: Response,
@@ -79,10 +88,20 @@ export async function authGoogleCallback(
   const existingUser = await userModel
     .findOne({ google_id: googleUser.sub })
     .exec();
+
+  const createAuthenticatedCookie = (sessionCookieAttrs: CookieAttributes) => {
+    return serializeCookie("authenticated", "1", {
+      ...sessionCookieAttrs,
+      httpOnly: false,
+    });
+  };
+
   if (existingUser != null) {
     const session = await lucia.createSession(existingUser._id as string, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
     res
-      .append("Set-Cookie", lucia.createSessionCookie(session.id).serialize())
+      .append("Set-Cookie", createAuthenticatedCookie(sessionCookie.attributes))
+      .append("Set-Cookie", sessionCookie.serialize())
       .redirect("/");
     return;
   }
@@ -99,16 +118,25 @@ export async function authGoogleCallback(
   });
 
   const session = await lucia.createSession(userId, {});
+  const sessionCookie = lucia.createSessionCookie(session.id);
   res
-    .append("Set-Cookie", lucia.createSessionCookie(session.id).serialize())
+    .append("Set-Cookie", createAuthenticatedCookie(sessionCookie.attributes))
+    .append("Set-Cookie", sessionCookie.serialize())
     .redirect("/");
 }
 
-interface GoogleUser {
-  sub: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  email: string;
-  email_verified: boolean;
+export async function logout(
+  req: Request,
+  res: Response,
+  _next: NextFunction
+): Promise<void> {
+  const session: Session = res.locals.session;
+  await lucia.invalidateSession(session.id);
+  res
+    .appendHeader("Set-Cookie", lucia.createBlankSessionCookie().serialize())
+    .clearCookie("authenticated")
+    .clearCookie("google_oauth_state")
+    .clearCookie("google_code_verifier")
+    .status(status.OK)
+    .send();
 }

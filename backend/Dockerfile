@@ -15,4 +15,4 @@ COPY --chown=node:node --from=build /usr/src/app/.env .
 COPY --chown=node:node --from=build /usr/src/app/package.json .
 COPY --chown=node:node --from=build /usr/src/app/package-lock.json .
 RUN npm ci --omit=dev
-CMD ["dumb-init", "node", "--env-file=.env", "dist"]
+CMD ["dumb-init", "node", "dist"]

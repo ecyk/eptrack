@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from "react";
 
-import useModal from "../contexts/useModal";
+import { useModal } from "../contexts/ModalContext";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
