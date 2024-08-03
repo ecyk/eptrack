@@ -1,7 +1,7 @@
 import { generateCodeVerifier, generateState } from "arctic";
 import { type Request, type Response, type NextFunction } from "express";
 import status from "http-status";
-import { Cookie, CookieAttributes, generateId, Session } from "lucia";
+import { type CookieAttributes, generateId, type Session } from "lucia";
 import { parseCookies, serializeCookie } from "oslo/cookie";
 
 import { userModel } from "./auth-model.js";
@@ -89,7 +89,9 @@ export async function authGoogleCallback(
     .findOne({ google_id: googleUser.sub })
     .exec();
 
-  const createAuthenticatedCookie = (sessionCookieAttrs: CookieAttributes) => {
+  const createAuthenticatedCookie = (
+    sessionCookieAttrs: CookieAttributes
+  ): string => {
     return serializeCookie("authenticated", "1", {
       ...sessionCookieAttrs,
       httpOnly: false,

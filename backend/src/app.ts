@@ -15,6 +15,8 @@ import config from "./config.js";
 import { errorConverter, errorHandler } from "./error-handlers.js";
 import logger from "./logger.js";
 import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 
@@ -23,19 +25,32 @@ app.set("trust proxy", 1);
 if (config.env === "development") {
   app.use(pinoHttp({ logger }));
 }
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "https: data:"],
+      },
+    },
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const staticPath = path.join(__dirname, "public");
+app.use(express.static(staticPath));
+
 if (config.env === "production") {
   app.use(
     "/api/v1/auth",
     rateLimit({
       windowMs: 15 * 60 * 1000,
-      limit: 10,
+      limit: 15,
       standardHeaders: "draft-7",
       legacyHeaders: false,
     })

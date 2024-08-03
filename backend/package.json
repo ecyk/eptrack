@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@lucia-auth/adapter-mongodb": "^1.0.3",
+    "@redis/json": "^1.0.7",
     "arctic": "^1.9.2",
     "argon2": "^0.40.3",
     "compression": "^1.7.4",
@@ -26,9 +27,11 @@
     "http-status": "^1.7.3",
     "lucia": "^3.2.0",
     "mongoose": "^8.5.1",
+    "node-fetch": "^3.3.2",
     "pino": "^8.17.2",
     "pino-http": "^9.0.0",
     "pino-pretty": "^10.3.1",
+    "redis": "^4.7.0",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.0"
   },

@@ -1,20 +1,24 @@
 import { type Request, type Response, type NextFunction } from "express";
-import status from "http-status";
-
-import { AppError } from "../../../app-error.js";
-import { lucia } from "./auth-strategy.js";
-import { verifyRequestOrigin } from "lucia";
 import expressAsyncHandler from "express-async-handler";
+import status from "http-status";
+import { verifyRequestOrigin } from "lucia";
 
-export function authorize(req: Request, res: Response, next: NextFunction) {
-  return expressAsyncHandler(async (req, res, next) => {
+import { lucia } from "./auth-strategy.js";
+import { AppError } from "../../../app-error.js";
+
+export function authorize(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  expressAsyncHandler(async (req, res, next) => {
     if (req.method !== "GET") {
       const originHeader = req.headers.origin ?? null;
       // NOTE: You may need to use `X-Forwarded-Host` instead
       const hostHeader = req.headers.host ?? null;
       if (
-        !originHeader ||
-        !hostHeader ||
+        originHeader == null ||
+        hostHeader == null ||
         !verifyRequestOrigin(originHeader, [hostHeader])
       ) {
         throw new AppError(status.FORBIDDEN, status[status.FORBIDDEN]);
@@ -22,18 +26,18 @@ export function authorize(req: Request, res: Response, next: NextFunction) {
     }
 
     const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
-    if (!sessionId) {
+    if (sessionId == null) {
       throw new AppError(status.UNAUTHORIZED, status[status.UNAUTHORIZED]);
     }
 
     const { session, user } = await lucia.validateSession(sessionId);
-    if (session && session.fresh) {
+    if (session != null && session.fresh) {
       res.appendHeader(
         "Set-Cookie",
         lucia.createSessionCookie(session.id).serialize()
       );
     }
-    if (!session) {
+    if (session == null) {
       res.appendHeader(
         "Set-Cookie",
         lucia.createBlankSessionCookie().serialize()
@@ -41,6 +45,6 @@ export function authorize(req: Request, res: Response, next: NextFunction) {
     }
     res.locals.user = user;
     res.locals.session = session;
-    return next();
+    next();
   })(req, res, next);
 }

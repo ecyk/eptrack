@@ -1,24 +1,34 @@
-import { type Server, type IncomingMessage, type ServerResponse } from "http";
-
+import { createClient, RedisModules } from "redis";
+import { RedisClientType } from "@redis/client";
 import mongoose from "mongoose";
 
 import app from "./app.js";
 import config from "./config.js";
 import logger from "./logger.js";
 
-if (config.env === "development") {
-  mongoose.set("debug", true);
+async function init() {
+  const redisClient = createClient({
+    url: config.redis.url,
+  });
+  redisClient.on("error", (err) => {
+    logger.error(err);
+    process.exit(1);
+  });
+  await redisClient.connect();
+
+  await mongoose.connect(config.mongoose.url);
+
+  return redisClient;
 }
 
-let server: Server<typeof IncomingMessage, typeof ServerResponse>;
-mongoose
-  .connect(config.mongoose.url)
-  .then(() => {
-    server = app.listen(config.port, () => {
-      logger.info(`Listening to port ${config.port}`);
-    });
-  })
-  .catch(logger.error);
+export const redisClient = await init().catch((err) => {
+  logger.error(err);
+  process.exit(1);
+});
+
+const server = app.listen(config.port, () => {
+  logger.info(`Listening to port ${config.port}`);
+});
 
 const unexpectedErrorHandler = (err: Error): void => {
   logger.error(err);
