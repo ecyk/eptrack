@@ -22,25 +22,16 @@ const queryClient = new QueryClient({
   }),
 });
 
-async function enableMocking() {
-  if (import.meta.env.DEV) {
-    const { worker } = await import("./mocks/browser");
-    return worker.start({ onUnhandledRequest: "bypass" });
-  }
-}
-
-void enableMocking().then(() => {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-      <ThemeProvider>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <ModalProvider>
-              <App />
-            </ModalProvider>
-          </QueryClientProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </React.StrictMode>
-  );
-});
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ModalProvider>
+            <App />
+          </ModalProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  </React.StrictMode>
+);

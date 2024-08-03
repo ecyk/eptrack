@@ -7,7 +7,7 @@ import Modal from "./Modal";
 
 interface MediaModalProps {
   tags: DropdownItem[];
-  media: MediaDetail;
+  media: MovieResponse | ShowResponse;
   onSave?: (dropdowns: DropdownProps[]) => void;
   onClose?: () => void;
 }
@@ -24,9 +24,9 @@ function MediaModal({ tags, media, onSave, onClose }: MediaModalProps) {
     ];
 
     if (media.type === "tv") {
-      (media as ShowDetail).seasons.forEach((season, seasonIndex) => {
+      (media as ShowResponse).seasons.forEach((season, seasonIndex) => {
         initialDropdowns.push({
-          text: season.name,
+          text: season.name ?? '',
           items: season.episodes.map((episode, episodeIndex) => ({
             text: `${episodeIndex + 1}. ${episode.name}`,
             name: `s${seasonIndex + 1}e${episodeIndex + 1}`,

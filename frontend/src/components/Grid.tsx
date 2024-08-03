@@ -21,14 +21,14 @@ function Skeleton({ className, children }: PropsWithChildren<SkeletonProps>) {
 
 interface ItemProps {
   media?: Media;
-  onClick?: (event: React.MouseEvent, id: number) => void;
+  onClick?: (event: React.MouseEvent, media: Media) => void;
 }
 
 function Item({ media, onClick }: ItemProps) {
   return (
     <article
       className={styles.item}
-      onClick={(event) => media?.id && onClick && onClick(event, media.id)}
+      onClick={(event) => media?.id && onClick && onClick(event, media)}
     >
       <button className={classNames("outline", "contrast", styles.btn)}>
         <Skeleton className={styles["skeleton-image"]}>
@@ -69,25 +69,25 @@ function Grid() {
     loadingSkeletonCount;
 
   const { modalIsOpen, handleOpen } = useModal();
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
 
-  const details = useQuery<MediaDetail, Error>({
-    queryKey: ["itemDetail", selectedItemId],
+  const details = useQuery<MovieResponse | ShowResponse, Error>({
+    queryKey: ["itemDetail", selectedMedia],
     queryFn: () =>
-      toast.promise(fetchDetail(selectedItemId), {
+      toast.promise(fetchDetail(selectedMedia), {
         loading: "Loading details...",
         success: <b>Details loaded!</b>,
         error: <b>Could not load details.</b>,
       }),
-    enabled: selectedItemId !== null,
+    enabled: selectedMedia !== null,
     staleTime: Infinity,
   });
 
   useEffect(() => {
-    if (!modalIsOpen && selectedItemId !== null && details.isSuccess) {
+    if (!modalIsOpen && selectedMedia !== null && details.isSuccess) {
       handleOpen();
     }
-  }, [modalIsOpen, handleOpen, selectedItemId, details.isSuccess]);
+  }, [modalIsOpen, handleOpen, selectedMedia, details.isSuccess]);
 
   return (
     <>
@@ -110,7 +110,7 @@ function Grid() {
               <Item
                 key={`media-${index}-${innerIndex}`}
                 media={item}
-                onClick={(_, id) => setSelectedItemId(id)}
+                onClick={() => setSelectedMedia(item)}
               />
             ))
           )}
@@ -128,7 +128,7 @@ function Grid() {
           ]}
           media={details.data!}
           onSave={(dropdowns) => console.log(dropdowns)}
-          onClose={() => setSelectedItemId(null)}
+          onClose={() => setSelectedMedia(null)}
         />
       )}
     </>

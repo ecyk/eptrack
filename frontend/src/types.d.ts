@@ -1,63 +1,46 @@
 interface Media {
   id: number;
-  name: string;
-  type: string;
-  poster_path: string;
+  name: string | null;
+  type: "movie" | "tv";
+  poster_path: string | null;
+}
+
+interface TrendingResponse {
+  results: Media[];
+  page: number;
+  total_pages: number;
 }
 
 interface MediaDetail extends Media {
   genres: { id: number; name: string }[];
   origin_country: string[];
-  original_language: string;
-  original_name: string;
-  overview: string;
-  popularity: number;
+  original_language: string | null;
+  overview: string | null;
+  popularity: number | null;
   release_date: string;
-  status: string;
-  vote_average: number;
+  status: string | null;
+  vote_average: number | null;
 }
 
-interface MovieDetail extends MediaDetail {
-  budget: number;
-  imdb_id: string;
-  revenue: number;
-  runtime: number;
-  watched: boolean;
+interface MovieResponse extends MediaDetail {
+  budget: number | null;
+  revenue: number | null;
+  runtime: number | null;
 }
 
 interface Episode {
   id: number;
-  name: string;
-  overview: string;
-  runtime: number | null;
-  air_date: string;
-  vote_average: number;
-  watched: boolean;
+  name: string | null;
 }
 
 interface Season {
   id: number;
-  name: string;
-  overview: string;
-  air_date: string | null;
-  vote_average: number;
+  name: string | null;
+  overview: string | null;
   episodes: Episode[];
 }
 
-interface ShowDetail extends MediaDetail {
-  in_production: boolean;
-  last_air_date: string;
+interface ShowResponse extends MediaDetail {
+  in_production: boolean | null;
   seasons: Season[];
-}
-
-interface ItemsResponse {
-  results: Media[];
-  total_pages: number;
-  error?: string;
-  nextCursor?: number;
-}
-
-interface DetailResponse {
-  result: MediaDetail;
-  error?: string;
 }

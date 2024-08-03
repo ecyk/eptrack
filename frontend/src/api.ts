@@ -1,23 +1,27 @@
 export const fetchItems = async (pageParam: number) => {
-  const response = await fetch(`/api/items?page=${pageParam}`);
-  const items = (await response.json()) as ItemsResponse;
-  if (items.error) {
-    throw new Error(items.error);
+  const response = await fetch(`/api/v1/media/trending?page=${pageParam}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch trending page ${pageParam}`);
   }
-  if (items.results.length && pageParam < items.total_pages) {
-    items.nextCursor = pageParam + 1;
+  const trending = (await response.json()) as TrendingResponse;
+  if (trending.results.length && pageParam < trending.total_pages) {
+    pageParam = pageParam + 1;
   }
-  return items;
+  return { ...trending, nextCursor: pageParam };
 };
 
-export const fetchDetail = async (selectedItemId: number | null) => {
-  if (selectedItemId === null) {
+export const fetchDetail = async (selectedMedia: Media | null) => {
+  if (selectedMedia === null) {
     throw new Error("No item selected");
   }
-  const response = await fetch(`/api/items/${selectedItemId}`);
-  const detail = (await response.json()) as DetailResponse;
-  if (detail.error) {
-    throw new Error(detail.error);
+  const response = await fetch(
+    `/api/v1/media/${selectedMedia.id}?type=${selectedMedia.type}`
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${selectedMedia.type ?? ""}`);
   }
-  return detail.result;
+  if (selectedMedia.type === "movie") {
+    return (await response.json()) as MovieResponse;
+  }
+  return (await response.json()) as ShowResponse;
 };

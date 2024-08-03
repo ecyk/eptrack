@@ -40,7 +40,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           window.location.reload();
         }
       })
-      .catch(toast.error);
+      .catch(() => toast.error('Failed to sign out'));
   };
 
   useEffect(() => {
