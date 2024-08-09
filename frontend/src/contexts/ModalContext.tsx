@@ -12,7 +12,11 @@ import getScrollBarWidth from "./utils/getScrollBarWidth";
 export interface ModalContextProps {
   modalIsOpen: boolean;
   handleOpen: (event?: React.MouseEvent) => void;
-  handleClose: (event?: React.MouseEvent, onClose?: () => void) => void;
+  handleClose: (
+    event?: React.MouseEvent,
+    onClose?: (positive?: boolean) => void,
+    positive?: boolean
+  ) => void;
 }
 
 export const ModalContext = createContext<ModalContextProps | undefined>(
@@ -45,14 +49,18 @@ export function ModalProvider({ children }: PropsWithChildren) {
   };
 
   const handleClose = useCallback(
-    (event?: React.MouseEvent, onClose?: () => void) => {
+    (
+      event?: React.MouseEvent,
+      onClose?: (positive?: boolean) => void,
+      positive?: boolean
+    ) => {
       event?.preventDefault();
       if (htmlTag instanceof HTMLElement) {
         htmlTag.classList.add("modal-is-closing");
         setTimeout(() => {
           setModalIsOpen(false);
           htmlTag.classList.remove("modal-is-open", "modal-is-closing");
-          onClose && onClose();
+          onClose && onClose(positive);
         }, modalAnimationDuration);
       }
     },

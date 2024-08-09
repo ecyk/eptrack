@@ -5,18 +5,17 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
+import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import status from "http-status";
 import { pinoHttp } from "pino-http";
 
+import { authorize } from "./api/v1/auth/auth-middlewares.js";
 import routes from "./api/v1/routes.js";
 import { AppError } from "./app-error.js";
 import config from "./config.js";
 import { errorConverter, errorHandler } from "./error-handlers.js";
 import logger from "./logger.js";
-import rateLimit from "express-rate-limit";
-import path from "path";
-import { fileURLToPath } from "url";
 
 const app = express();
 
@@ -41,9 +40,7 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const staticPath = path.join(__dirname, "public");
-app.use(express.static(staticPath));
+app.use(authorize);
 
 if (config.env === "production") {
   app.use(

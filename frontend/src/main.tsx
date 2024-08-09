@@ -17,7 +17,7 @@ import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(error.message);
     },
   }),
 });

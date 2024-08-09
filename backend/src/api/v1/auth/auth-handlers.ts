@@ -9,7 +9,7 @@ import { lucia, google } from "./auth-strategy.js";
 import { AppError } from "../../../app-error.js";
 import config from "../../../config.js";
 
-export async function authGoogle(
+export async function handleGoogleAuth(
   req: Request,
   res: Response,
   _next: NextFunction
@@ -52,7 +52,7 @@ interface GoogleUser {
   email_verified: boolean;
 }
 
-export async function authGoogleCallback(
+export async function handleGoogleAuthCallback(
   req: Request,
   res: Response,
   _next: NextFunction
@@ -127,13 +127,12 @@ export async function authGoogleCallback(
     .redirect("/");
 }
 
-export async function logout(
+export async function handleLogout(
   req: Request,
   res: Response,
   _next: NextFunction
 ): Promise<void> {
-  const session: Session = res.locals.session;
-  await lucia.invalidateSession(session.id);
+  await lucia.invalidateSession((res.locals.session as Session).id);
   res
     .appendHeader("Set-Cookie", lucia.createBlankSessionCookie().serialize())
     .clearCookie("authenticated")

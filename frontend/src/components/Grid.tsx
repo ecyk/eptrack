@@ -1,4 +1,8 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import classNames from "classnames";
 import { PropsWithChildren, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -50,14 +54,11 @@ function Item({ media, onClick }: ItemProps) {
 }
 
 function Grid() {
+  const client = useQueryClient();
+
   const items = useInfiniteQuery({
     queryKey: ["items"],
-    queryFn: ({ pageParam }) =>
-      toast.promise(fetchItems(pageParam), {
-        loading: "Loading items...",
-        success: <b>Items loaded!</b>,
-        error: <b>Could not load items.</b>,
-      }),
+    queryFn: ({ pageParam }) => fetchItems(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Infinity,
@@ -72,26 +73,26 @@ function Grid() {
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
 
   const details = useQuery<MovieResponse | ShowResponse, Error>({
-    queryKey: ["itemDetail", selectedMedia],
+    queryKey: ["details", selectedMedia],
     queryFn: () =>
       toast.promise(fetchDetail(selectedMedia), {
         loading: "Loading details...",
         success: <b>Details loaded!</b>,
         error: <b>Could not load details.</b>,
       }),
-    enabled: selectedMedia !== null,
+    enabled: selectedMedia != null,
     staleTime: Infinity,
   });
 
   useEffect(() => {
-    if (!modalIsOpen && selectedMedia !== null && details.isSuccess) {
+    if (selectedMedia != null) {
       handleOpen();
     }
-  }, [modalIsOpen, handleOpen, selectedMedia, details.isSuccess]);
+  }, [selectedMedia, handleOpen]);
 
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster position="bottom-right" />
       <InfiniteScroll
         dataLength={totalItemCount}
         next={items.fetchNextPage}
@@ -120,15 +121,38 @@ function Grid() {
             ))}
         </div>
       </InfiniteScroll>
-      {modalIsOpen && (
+      {modalIsOpen && details.isSuccess && (
         <DetailModal
           tags={[
-            { text: "Watched", name: "tag-1", checked: false },
-            { text: "Watching", name: "tag-2", checked: false },
+            {
+              text: "Watched",
+              id: 12,
+              checked: false,
+              active: true,
+              updated: false,
+            },
+            {
+              text: "Watching",
+              id: 13,
+              checked: false,
+              active: true,
+              updated: false,
+            },
           ]}
-          media={details.data!}
-          onSave={(dropdowns) => console.log(dropdowns)}
-          onClose={() => setSelectedMedia(null)}
+          media={details.data}
+          hasCancel={true}
+          onClose={(positive?: boolean) => {
+            if (positive) {
+              void client
+                .invalidateQueries({
+                  queryKey: ["details", selectedMedia],
+                  refetchType: "none",
+                })
+                .then(() => setSelectedMedia(null));
+            } else {
+              setSelectedMedia(null);
+            }
+          }}
         />
       )}
     </>

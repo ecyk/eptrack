@@ -25,15 +25,37 @@ const sessionSchema = new Schema<Session>(
 
 export const sessionModel = mongoose.model<Session>("Session", sessionSchema);
 
+export interface Tag {
+  name: string;
+}
+
+export interface Media {
+  mediaId: number;
+  tags: number[];
+  watched?: boolean;
+  episodes?: number[];
+}
+
 export interface User extends Document {
   google_id: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  email: string;
-  email_verified: boolean;
+  tags: Tag[];
+  medias: Media[];
   created_at?: Date;
 }
+
+const tagSchema = new Schema({
+  name: { type: String, required: true },
+});
+
+const mediaSchema = new Schema(
+  {
+    mediaId: { type: Number, required: true },
+    tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
+    watched: { type: Boolean, default: false },
+    episodes: [{ type: Number }],
+  },
+  { _id: false }
+);
 
 const userSchema = new Schema<User>(
   {
@@ -45,14 +67,8 @@ const userSchema = new Schema<User>(
       type: String,
       required: true,
     },
-    given_name: String,
-    family_name: String,
-    picture: String,
-    email: {
-      type: String,
-      required: true,
-    },
-    email_verified: Boolean,
+    tags: [tagSchema],
+    medias: [mediaSchema],
     created_at: {
       type: Date,
       default: Date.now,

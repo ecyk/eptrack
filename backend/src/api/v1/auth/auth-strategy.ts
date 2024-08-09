@@ -21,11 +21,6 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
     return {
       google_id: attributes.google_id,
-      given_name: attributes.given_name,
-      family_name: attributes.family_name,
-      picture: attributes.picture,
-      email: attributes.email,
-      email_verified: attributes.email_verified,
     };
   },
 });

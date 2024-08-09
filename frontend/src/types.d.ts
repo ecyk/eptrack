@@ -43,4 +43,12 @@ interface Season {
 interface ShowResponse extends MediaDetail {
   in_production: boolean | null;
   seasons: Season[];
+  watched?: number[];
+}
+
+type SaveShowData = [number, boolean][];
+
+interface SaveShowRequest {
+  mediaId: number;
+  data: SaveShowData;
 }

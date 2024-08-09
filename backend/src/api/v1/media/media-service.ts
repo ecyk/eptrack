@@ -109,6 +109,7 @@ export async function getMedia(
         revenue: movie.revenue,
         runtime: movie.runtime,
       };
+
       await redisClient.json.set(path, "$", filteredMovie);
       return filteredMovie;
     }

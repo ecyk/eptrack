@@ -1,7 +1,9 @@
 import { type Request, type Response, type NextFunction } from "express";
+import { type User as LuciaUser } from "lucia";
 
 import { getMedia, getTrending } from "./media-service.js";
 import { mediaSchema, trendingSchema } from "./media-validates.js";
+import { getUserMediaData } from "../user/user-service.js";
 
 export async function handleGetTrending(
   req: Request,
@@ -21,5 +23,12 @@ export async function handleGetMedia(
     id: req.params.mediaId,
     type: req.query.type,
   });
-  res.json(await getMedia(id, type));
+
+  const media: any = await getMedia(id, type);
+
+  const user: LuciaUser | null = res.locals.user;
+  if (user != null) {
+    media.watched = await getUserMediaData(user.id, id);
+  }
+  res.json(media);
 }

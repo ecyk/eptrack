@@ -14,7 +14,6 @@ export function authorize(
   expressAsyncHandler(async (req, res, next) => {
     if (req.method !== "GET") {
       const originHeader = req.headers.origin ?? null;
-      // NOTE: You may need to use `X-Forwarded-Host` instead
       const hostHeader = req.headers.host ?? null;
       if (
         originHeader == null ||
@@ -27,7 +26,10 @@ export function authorize(
 
     const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
     if (sessionId == null) {
-      throw new AppError(status.UNAUTHORIZED, status[status.UNAUTHORIZED]);
+      res.locals.user = null;
+      res.locals.session = null;
+      next();
+      return;
     }
 
     const { session, user } = await lucia.validateSession(sessionId);
@@ -47,4 +49,15 @@ export function authorize(
     res.locals.session = session;
     next();
   })(req, res, next);
+}
+
+export function protect(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  if (res.locals.session == null) {
+    throw new AppError(status.UNAUTHORIZED, status[status.UNAUTHORIZED]);
+  }
+  next();
 }

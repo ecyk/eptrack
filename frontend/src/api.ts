@@ -25,3 +25,17 @@ export const fetchDetail = async (selectedMedia: Media | null) => {
   }
   return (await response.json()) as ShowResponse;
 };
+
+export const updateDetail = async (request: SaveShowRequest) => {
+  const response = await fetch(`/api/v1/user/media`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to save`);
+  }
+};
