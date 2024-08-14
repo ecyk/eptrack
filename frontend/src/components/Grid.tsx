@@ -4,14 +4,18 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import classNames from "classnames";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDebounce } from "use-debounce";
 
-import { fetchDetail, fetchItems } from "../api";
+import { fetchAllTags, fetchDetail, fetchItems } from "../api";
+import { useAuth } from "../contexts/AuthContext";
 import { useModal } from "../contexts/ModalContext";
 import DetailModal from "./DetailModal";
 import styles from "./Grid.module.css";
+import Search from "./Search";
+import TagModal from "./TagModal";
 
 interface SkeletonProps {
   className?: string;
@@ -55,10 +59,23 @@ function Item({ media, onClick }: ItemProps) {
 
 function Grid() {
   const client = useQueryClient();
+  const { isAuthenticated } = useAuth();
+
+  const tags = useQuery<Tag[], Error>({
+    queryKey: ["tags"],
+    queryFn: () => fetchAllTags(),
+    enabled: isAuthenticated,
+    staleTime: Infinity,
+  });
+
+  const [searchTags, setSearchTags] = useState<number[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQueryDebounce] = useDebounce(searchQuery, 300);
 
   const items = useInfiniteQuery({
-    queryKey: ["items"],
-    queryFn: ({ pageParam }) => fetchItems(pageParam),
+    queryKey: ["items", searchQueryDebounce, searchTags],
+    queryFn: ({ pageParam }) =>
+      fetchItems(pageParam, searchQueryDebounce, searchTags),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Infinity,
@@ -84,15 +101,15 @@ function Grid() {
     staleTime: Infinity,
   });
 
-  useEffect(() => {
-    if (selectedMedia != null) {
-      handleOpen();
-    }
-  }, [selectedMedia, handleOpen]);
-
   return (
     <>
       <Toaster position="bottom-right" />
+      <Search
+        tags={tags?.data ?? []}
+        searchQuery={searchQuery}
+        onSearchQueryChange={setSearchQuery}
+        onSearchTagChange={setSearchTags}
+      />
       <InfiniteScroll
         dataLength={totalItemCount}
         next={items.fetchNextPage}
@@ -111,38 +128,42 @@ function Grid() {
               <Item
                 key={`media-${index}-${innerIndex}`}
                 media={item}
-                onClick={() => setSelectedMedia(item)}
+                onClick={() => {
+                  setSelectedMedia(item);
+                  handleOpen();
+                }}
               />
             ))
           )}
           {(items.isLoading || items.isLoadingError) &&
             Array.from({ length: loadingSkeletonCount }, (_, index) => (
-              <Item key={`skeleton-${index}`} />
+              <Item key={index} />
             ))}
         </div>
       </InfiniteScroll>
-      {modalIsOpen && details.isSuccess && (
-        <DetailModal
-          tags={[
-            {
-              text: "Watched",
-              id: 12,
-              checked: false,
-              active: true,
-              updated: false,
-            },
-            {
-              text: "Watching",
-              id: 13,
-              checked: false,
-              active: true,
-              updated: false,
-            },
-          ]}
-          media={details.data}
+      {modalIsOpen && selectedMedia == null && (
+        <TagModal
           hasCancel={true}
           onClose={(positive?: boolean) => {
             if (positive) {
+              void client.refetchQueries({
+                queryKey: ["tags"],
+              });
+            }
+          }}
+        />
+      )}
+      {modalIsOpen && selectedMedia != null && details.isSuccess && (
+        <DetailModal
+          media={details.data}
+          tags={tags?.data ?? []}
+          hasCancel={true}
+          onClose={(positive?: boolean) => {
+            if (positive) {
+              void client.refetchQueries({
+                queryKey: ["items", searchQueryDebounce, searchTags],
+              });
+
               void client
                 .invalidateQueries({
                   queryKey: ["details", selectedMedia],

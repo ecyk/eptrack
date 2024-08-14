@@ -5,6 +5,7 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
+import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import status from "http-status";
@@ -36,6 +37,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(mongoSanitize());
 app.use(compression());
 app.use(cors());
 app.options("*", cors());

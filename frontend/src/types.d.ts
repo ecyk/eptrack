@@ -11,6 +11,12 @@ interface TrendingResponse {
   total_pages: number;
 }
 
+interface SearchResponse {
+  results: Media[];
+  page: number;
+  total_pages: number;
+}
+
 interface MediaDetail extends Media {
   genres: { id: number; name: string }[];
   origin_country: string[];
@@ -20,6 +26,7 @@ interface MediaDetail extends Media {
   release_date: string;
   status: string | null;
   vote_average: number | null;
+  tags?: number[];
 }
 
 interface MovieResponse extends MediaDetail {
@@ -43,12 +50,28 @@ interface Season {
 interface ShowResponse extends MediaDetail {
   in_production: boolean | null;
   seasons: Season[];
-  watched?: number[];
+  watchedEpisodes: number[];
 }
 
-type SaveShowData = [number, boolean][];
+interface Tag {
+  tagId: number;
+  name: string;
+}
 
-interface SaveShowRequest {
+type SaveData = [number, boolean][];
+
+interface SaveMediaRequest {
   mediaId: number;
-  data: SaveShowData;
+  type: "tv" | "movie";
+  tags: SaveData;
+  watchedEpisodes: SaveData;
+}
+
+interface tagRequest {
+  name: string;
+}
+
+interface ErrorResponse {
+  code: number;
+  message: string;
 }

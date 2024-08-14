@@ -1,0 +1,13 @@
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.search-bar {
+  max-width: fit-content;
+}
+
+.manage-tags-btn {
+  margin-left: auto;
+}

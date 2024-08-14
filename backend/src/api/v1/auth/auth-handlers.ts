@@ -4,10 +4,10 @@ import status from "http-status";
 import { type CookieAttributes, generateId, type Session } from "lucia";
 import { parseCookies, serializeCookie } from "oslo/cookie";
 
-import { userModel } from "./auth-model.js";
 import { lucia, google } from "./auth-strategy.js";
 import { AppError } from "../../../app-error.js";
 import config from "../../../config.js";
+import { userModel } from "../user/user-model.js";
 
 export async function handleGoogleAuth(
   req: Request,
@@ -112,11 +112,6 @@ export async function handleGoogleAuthCallback(
   await userModel.create({
     _id: userId,
     google_id: googleUser.sub,
-    given_name: googleUser.given_name,
-    family_name: googleUser.family_name,
-    picture: googleUser.picture,
-    email: googleUser.email,
-    email_verified: googleUser.email_verified,
   });
 
   const session = await lucia.createSession(userId, {});
@@ -138,6 +133,6 @@ export async function handleLogout(
     .clearCookie("authenticated")
     .clearCookie("google_oauth_state")
     .clearCookie("google_code_verifier")
-    .status(status.OK)
+    .status(status.NO_CONTENT)
     .send();
 }

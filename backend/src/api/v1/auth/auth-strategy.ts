@@ -3,8 +3,8 @@ import { Google } from "arctic";
 import { Lucia, TimeSpan } from "lucia";
 import mongoose from "mongoose";
 
-import { type User } from "./auth-model.js";
 import config from "../../../config.js";
+import { type User } from "../user/user-model.js";
 
 const adapter = new MongodbAdapter(
   mongoose.connection.collection("sessions"),

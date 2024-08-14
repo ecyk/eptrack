@@ -6,6 +6,12 @@ import {
   type TMDBMovie,
   type TMDBShow,
   type TMDBTrending,
+  type TMDBSearch,
+  type Movie,
+  type Show,
+  type Season,
+  type SearchResponse,
+  type TrendingResponse,
 } from "./media-types.js";
 import { AppError } from "../../../app-error.js";
 import config from "../../../config.js";
@@ -34,7 +40,7 @@ export async function getTrending(page: number): Promise<unknown> {
   }
 
   const trending = (await tmdbFetch(path)) as TMDBTrending;
-  const filteredTrending = {
+  const filteredTrending: TrendingResponse = {
     results: trending.results.map((item) => ({
       id: item.id,
       name: item.title ?? item.name ?? null,
@@ -50,13 +56,44 @@ export async function getTrending(page: number): Promise<unknown> {
   return filteredTrending;
 }
 
-function transformSeasons(show: TMDBShow): any {
+export async function searchMedia(
+  query: string,
+  page: number
+): Promise<unknown> {
+  const path = `/search/multi?query=${query}&page=${page}`;
+
+  const cachedSearch = await redisClient.json.get(path);
+  if (cachedSearch != null) {
+    return cachedSearch;
+  }
+
+  const searchResult = (await tmdbFetch(path)) as TMDBSearch;
+  const filteredSearchResult: SearchResponse = {
+    results: searchResult.results.map((item) => ({
+      id: item.id,
+      name: item.title ?? item.name ?? null,
+      type: item.media_type,
+      poster_path: item.poster_path,
+    })),
+    page,
+    total_pages: searchResult.total_pages,
+  };
+
+  await redisClient.json.set(path, "$", filteredSearchResult);
+  await redisClient.expire(path, 10 * 60); // 10 mins
+  return filteredSearchResult;
+}
+
+function transformSeasons(show: TMDBShow): Season[] {
   const getSeasonId = (key: string): number => {
     const seasonNumber = parseInt(key.replace("season/", ""), 10);
     const hasSpecials =
       show.seasons.length > 0 && show.seasons[0]?.name === "Specials";
     const index = seasonNumber - 1 + (hasSpecials ? 1 : 0);
-    return show.seasons[index]?.id ?? 0;
+    if (show.seasons[index] == null) {
+      throw new Error("Invalid season index");
+    }
+    return show.seasons[index].id;
   };
 
   const seasons = Object.keys(show)
@@ -81,18 +118,18 @@ function transformSeasons(show: TMDBShow): any {
 export async function getMedia(
   id: number,
   type: "movie" | "tv"
-): Promise<unknown> {
+): Promise<Movie | Show> {
   const path = `/${type}/${id}`;
 
   const cachedMedia = await redisClient.json.get(path);
   if (cachedMedia != null) {
-    return cachedMedia;
+    return cachedMedia as Movie | Show;
   }
 
   switch (type) {
     case "movie": {
       const movie = (await tmdbFetch(path)) as TMDBMovie;
-      const filteredMovie = {
+      const filteredMovie: Movie = {
         id: movie.id,
         name: movie.title ?? null,
         type,
@@ -133,7 +170,7 @@ export async function getMedia(
         );
       }
 
-      const filteredShow = {
+      const filteredShow: Show = {
         id: show.id,
         name: show.name ?? null,
         type,

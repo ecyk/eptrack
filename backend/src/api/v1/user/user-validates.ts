@@ -1,6 +1,12 @@
 import z from "zod";
 
-export const updateUserMediaDataSchema = z.object({
+export const updateMediaDataSchema = z.object({
   mediaId: z.number().positive(),
-  data: z.array(z.tuple([z.number(), z.boolean()])).min(1),
+  type: z.enum(["tv", "movie"]),
+  tags: z.array(z.tuple([z.number(), z.boolean()])),
+  watchedEpisodes: z.array(z.tuple([z.number(), z.boolean()])),
+});
+
+export const tagSchema = z.object({
+  name: z.string().min(3).max(100),
 });

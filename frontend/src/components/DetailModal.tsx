@@ -8,17 +8,17 @@ import { updateDetail } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { useModal } from "../contexts/ModalContext";
 import Dropdown from "./Dropdown";
-import { DropdownItem, DropdownProps } from "./Dropdown";
+import { DropdownProps } from "./Dropdown";
 import styles from "./Modal.module.css";
 
 interface MediaModalProps {
-  tags: DropdownItem[];
   media: MovieResponse | ShowResponse;
+  tags: Tag[];
   hasCancel: boolean;
   onClose: (positive?: boolean) => void;
 }
 
-function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
+function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
   const { modalIsOpen, handleClose } = useModal();
 
   const handleClickOverlay = (event: React.MouseEvent) => {
@@ -28,7 +28,7 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
   };
 
   const data = useMutation({
-    mutationFn: (request: SaveShowRequest) =>
+    mutationFn: (request: SaveMediaRequest) =>
       toast.promise(updateDetail(request), {
         loading: "Saving details...",
         success: <b>Details saved!</b>,
@@ -40,15 +40,22 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
 
   const { isAuthenticated } = useAuth();
 
-  const initializeDropdowns = useCallback((): DropdownProps[] => {
-    const initialDropdowns: DropdownProps[] = [
-      {
+  const initDropdowns = useCallback((): DropdownProps[] => {
+    const initialDropdowns: DropdownProps[] = [];
+
+    if (isAuthenticated && tags.length !== 0) {
+      initialDropdowns.push({
         text: "Tags",
-        items: [...tags],
-        initialOpen: true,
+        items: tags.map((tag) => ({
+          id: tag.tagId,
+          text: tag.name,
+          checked: (media as MediaDetail).tags?.includes(tag.tagId) ?? false,
+          active: true,
+          updated: false,
+        })),
         inline: true,
-      },
-    ];
+      });
+    }
 
     if (media.type === "tv") {
       (media as ShowResponse).seasons.forEach((season) => {
@@ -58,7 +65,8 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
             id: episode.id,
             text: `${episodeIndex + 1}. ${episode.name}`,
             checked:
-              (media as ShowResponse).watched?.includes(episode.id) ?? false,
+              (media as ShowResponse).watchedEpisodes?.includes(episode.id) ??
+              false,
             active: isAuthenticated,
             updated: false,
           })),
@@ -70,13 +78,11 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
     return initialDropdowns;
   }, [isAuthenticated, media, tags]);
 
-  const [dropdowns, setDropdowns] = useState<DropdownProps[]>(
-    initializeDropdowns()
-  );
+  const [dropdowns, setDropdowns] = useState<DropdownProps[]>(initDropdowns());
 
   useEffect(() => {
-    setDropdowns(initializeDropdowns());
-  }, [media, initializeDropdowns]);
+    setDropdowns(initDropdowns());
+  }, [media, initDropdowns]);
 
   const handleDropdownChange = (dropdownIndex: number, itemIndex: number) => {
     setDropdowns((prev) =>
@@ -91,13 +97,22 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
   const [saving, setSaving] = useState(false);
 
   const onSave = () => {
-    const updated: SaveShowData = dropdowns
-      .flatMap((dropdown) => dropdown.items.filter((item) => item.updated))
-      .map((item) => {
-        return [item.id, item.checked];
-      });
+    const getUpdatedItems = (
+      dropdowns: DropdownProps[],
+      tags: boolean
+    ): SaveData => {
+      return dropdowns
+        .filter((dropdown) =>
+          tags ? dropdown.text === "Tags" : dropdown.text !== "Tags"
+        )
+        .flatMap((dropdown) => dropdown.items.filter((item) => item.updated))
+        .map((item) => [item.id, item.checked]);
+    };
 
-    if (!updated.length) {
+    const updatedTags = getUpdatedItems(dropdowns, true);
+    const updatedWatchedEpisodes = getUpdatedItems(dropdowns, false);
+
+    if (!updatedTags.length && !updatedWatchedEpisodes.length) {
       toast.error("Nothing is changed");
       return;
     }
@@ -105,7 +120,9 @@ function MediaModal({ tags, media, hasCancel, onClose }: MediaModalProps) {
     setSaving(true);
     data.mutate({
       mediaId: media.id,
-      data: updated,
+      type: media.type,
+      tags: updatedTags,
+      watchedEpisodes: updatedWatchedEpisodes,
     });
   };
 
