@@ -1,5 +1,22 @@
 services:
-  eptrack-backend:
+  eptrack:
+    container_name: eptrack-backend
     build: .
     ports:
       - '3000:3000'
+    environment:
+      NODE_ENV: production
+      REDIS_URL:
+      MONGODB_URI:
+      GOOGLE_CLIENT_ID:
+      GOOGLE_CLIENT_SECRET:
+      GOOGLE_REDIRECT_URI:
+      TMDB_API_KEY:
+    depends_on:
+      - redis-stack
+
+  redis-stack:
+    container_name: eptrack-redis
+    image: redis/redis-stack:latest
+    ports:
+      - '6379:6379'

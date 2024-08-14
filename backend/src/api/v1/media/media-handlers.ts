@@ -44,7 +44,7 @@ export async function handleGetSearch(
         poster_path: detail.poster_path,
       });
     }
-    res.json({ results });
+    res.json({ results, page: 1, total_pages: 1 });
     return;
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

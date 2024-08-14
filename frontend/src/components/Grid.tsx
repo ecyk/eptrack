@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import classNames from "classnames";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce";
@@ -101,6 +101,12 @@ function Grid() {
     staleTime: Infinity,
   });
 
+  useEffect(() => {
+    if (!modalIsOpen && details.isSuccess) {
+      handleOpen();
+    }
+  }, [modalIsOpen, details.isSuccess, handleOpen]);
+
   return (
     <>
       <Toaster position="bottom-right" />
@@ -128,10 +134,7 @@ function Grid() {
               <Item
                 key={`media-${index}-${innerIndex}`}
                 media={item}
-                onClick={() => {
-                  setSelectedMedia(item);
-                  handleOpen();
-                }}
+                onClick={() => setSelectedMedia(item)}
               />
             ))
           )}

@@ -69,18 +69,20 @@ export async function searchMedia(
 
   const searchResult = (await tmdbFetch(path)) as TMDBSearch;
   const filteredSearchResult: SearchResponse = {
-    results: searchResult.results.map((item) => ({
-      id: item.id,
-      name: item.title ?? item.name ?? null,
-      type: item.media_type,
-      poster_path: item.poster_path,
-    })),
+    results: searchResult.results
+      .filter((item) => item.media_type === "movie" || item.media_type === "tv")
+      .map((item) => ({
+        id: item.id,
+        name: item.title ?? item.name ?? null,
+        type: item.media_type,
+        poster_path: item.poster_path,
+      })),
     page,
     total_pages: searchResult.total_pages,
   };
 
   await redisClient.json.set(path, "$", filteredSearchResult);
-  await redisClient.expire(path, 10 * 60); // 10 mins
+  await redisClient.expire(path, 1 * 60); // 1 min
   return filteredSearchResult;
 }
 
@@ -90,10 +92,7 @@ function transformSeasons(show: TMDBShow): Season[] {
     const hasSpecials =
       show.seasons.length > 0 && show.seasons[0]?.name === "Specials";
     const index = seasonNumber - 1 + (hasSpecials ? 1 : 0);
-    if (show.seasons[index] == null) {
-      throw new Error("Invalid season index");
-    }
-    return show.seasons[index].id;
+    return show.seasons[index]?.id ?? 0;
   };
 
   const seasons = Object.keys(show)

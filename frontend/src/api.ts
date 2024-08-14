@@ -11,7 +11,7 @@ export const fetchItems = async (
       throw new Error(err.message);
     }
     const result = data as SearchResponse;
-    return { ...result, nextCursor: pageParam };
+    return { ...result, nextCursor: undefined };
   }
 
   if (searchQuery !== "") {
