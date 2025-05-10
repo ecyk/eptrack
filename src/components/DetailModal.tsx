@@ -111,8 +111,8 @@ function MediaModal({ media, hasCancel, onClose }: MediaModalProps) {
   };
 
   interface SeasonDropdownItem extends DropdownItem {
-    episodeId: string;
-    seasonId: string;
+    episodeId: number;
+    seasonId: number;
   }
 
   const [saving, setSaving] = useState(false);
@@ -138,8 +138,8 @@ function MediaModal({ media, hasCancel, onClose }: MediaModalProps) {
       false,
     ).map((item) => {
       return {
-        id: (item as SeasonDropdownItem).episodeId,
-        seasonId: (item as SeasonDropdownItem).seasonId,
+        id: (item as SeasonDropdownItem).episodeId.toString(),
+        seasonId: (item as SeasonDropdownItem).seasonId.toString(),
         op: item.checked ? "add" : "remove",
       };
     });

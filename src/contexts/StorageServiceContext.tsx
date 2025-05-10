@@ -181,7 +181,7 @@ export function StorageServiceProvider({ children }: PropsWithChildren) {
       }
     } else if (update.type === "tv") {
       if (!updatedUserData.shows[update.id]) {
-        updatedUserData.shows[update.id] = { seasons: {} };
+        updatedUserData.shows[update.id] = {};
       }
       const show = updatedUserData.shows[update.id];
       if (!show.tags) {
