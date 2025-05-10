@@ -1,8 +1,0 @@
-.dockerignore
-compose.yaml
-Dockerfile
-node_modules/
-dist/
-.git
-.gitignore
-.eslintrc.js
