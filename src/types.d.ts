@@ -1,77 +1,59 @@
-interface Media {
+export interface BasicTmdbMedia {
   id: number;
-  name: string | null;
-  type: "movie" | "tv";
+  media_type: "movie" | "tv" | "person";
+  title?: string | null;
+  name?: string | null;
+}
+
+export interface TmdbMedia extends BasicTmdbMedia {
   poster_path: string | null;
-}
-
-interface TrendingResponse {
-  results: Media[];
-  page: number;
-  total_pages: number;
-}
-
-interface SearchResponse {
-  results: Media[];
-  page: number;
-  total_pages: number;
-}
-
-interface MediaDetail extends Media {
-  genres: { id: number; name: string }[];
+  genre_ids?: number[];
   origin_country: string[];
   original_language: string | null;
   overview: string | null;
   popularity: number | null;
-  release_date: string;
   status: string | null;
   vote_average: number | null;
-  tags?: number[];
+  genres?: Array<{ id: number; name: string }>;
 }
 
-interface MovieResponse extends MediaDetail {
+export interface TmdbTrending {
+  results: TmdbMedia[];
+  page: number;
+  total_pages: number;
+}
+
+export interface TmdbSearch {
+  results: TmdbMedia[];
+  page: number;
+  total_pages: number;
+}
+
+export interface TmdbMovie extends Omit<TmdbMedia, "name"> {
+  release_date: string | null;
   budget: number | null;
   revenue: number | null;
   runtime: number | null;
 }
 
-interface Episode {
+export interface TmdbEpisode {
   id: number;
   name: string | null;
 }
 
-interface Season {
+export interface TmdbSeason {
   id: number;
   name: string | null;
   overview: string | null;
-  episodes: Episode[];
+  air_date: string | null;
+  episodes?: TmdbEpisode[];
+  season_number: number;
 }
 
-interface ShowResponse extends MediaDetail {
+export interface TmdbShow extends Omit<TmdbMedia, "title"> {
+  first_air_date: string | null;
   in_production: boolean | null;
-  seasons: Season[];
-  watchedEpisodes: number[];
-}
-
-interface Tag {
-  tagId: number;
-  name: string;
-}
-
-type SaveData = [number, boolean][];
-
-interface SaveMediaRequest {
-  mediaId: number;
-  type: "tv" | "movie";
-  tags: SaveData;
-  watchedEpisodes: SaveData;
-}
-
-interface tagRequest {
-  name: string;
-}
-
-interface ErrorResponse {
-  code: number;
-  message: string;
+  number_of_seasons: number | null;
+  seasons: TmdbSeason[];
+  [key: `season/${number}`]: TmdbSeason;
 }

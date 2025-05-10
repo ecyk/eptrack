@@ -15,12 +15,12 @@ export interface ModalContextProps {
   handleClose: (
     event?: React.MouseEvent,
     onClose?: (positive?: boolean) => void,
-    positive?: boolean
+    positive?: boolean,
   ) => void;
 }
 
 export const ModalContext = createContext<ModalContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export function useModal(): ModalContextProps {
@@ -52,7 +52,7 @@ export function ModalProvider({ children }: PropsWithChildren) {
     (
       event?: React.MouseEvent,
       onClose?: (positive?: boolean) => void,
-      positive?: boolean
+      positive?: boolean,
     ) => {
       event?.preventDefault();
       if (htmlTag instanceof HTMLElement) {
@@ -60,11 +60,13 @@ export function ModalProvider({ children }: PropsWithChildren) {
         setTimeout(() => {
           setModalIsOpen(false);
           htmlTag.classList.remove("modal-is-open", "modal-is-closing");
-          onClose && onClose(positive);
+          if (onClose) {
+            onClose(positive);
+          }
         }, modalAnimationDuration);
       }
     },
-    [htmlTag, setModalIsOpen, modalAnimationDuration]
+    [htmlTag, setModalIsOpen, modalAnimationDuration],
   );
 
   useEffect(() => {
@@ -85,7 +87,7 @@ export function ModalProvider({ children }: PropsWithChildren) {
       const scrollBarWidth = getScrollBarWidth();
       htmlTag.style.setProperty(
         "--pico-scrollbar-width",
-        `${scrollBarWidth}px`
+        `${scrollBarWidth}px`,
       );
       return () => {
         htmlTag.style.removeProperty("--pico-scrollbar-width");

@@ -3,7 +3,7 @@ import IconMoon from "../icons/IconMoon";
 import IconSun from "../icons/IconSun";
 
 function ColorSchemeSwitcher(
-  props: React.AnchorHTMLAttributes<HTMLAnchorElement>
+  props: React.AnchorHTMLAttributes<HTMLAnchorElement>,
 ) {
   const { theme, switchTheme } = useTheme();
   const nextTheme = theme === "dark" ? "light" : "dark";

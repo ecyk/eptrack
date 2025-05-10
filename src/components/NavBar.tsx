@@ -1,11 +1,11 @@
 import classNames from "classnames";
 
-import { useAuth } from "../contexts/AuthContext";
+import { useStorageService } from "../contexts/StorageServiceContext";
 import ColorSchemeSwitcher from "./ColorSchemeSwitcher";
 import styles from "./NavBar.module.css";
 
 function NavBar() {
-  const { isAuthenticated, signIn, signOut } = useAuth();
+  const { userData, signIn, signOut } = useStorageService();
 
   return (
     <nav>
@@ -24,10 +24,14 @@ function NavBar() {
           <button
             className={classNames("outline", "contrast")}
             onClick={() => {
-              isAuthenticated ? signOut() : signIn();
+              if (userData) {
+                signOut();
+              } else {
+                signIn();
+              }
             }}
           >
-            {(isAuthenticated && "Sign out") || "Sign in with Google"}
+            {(userData && "Sign out") || "Sign in with Google"}
           </button>
         </li>
       </ul>

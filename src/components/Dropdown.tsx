@@ -3,7 +3,6 @@ import classNames from "classnames";
 import styles from "./Dropdown.module.css";
 
 export interface DropdownItem {
-  id: number;
   text: string;
   checked: boolean;
   active: boolean;
@@ -35,12 +34,12 @@ function Dropdown({
       <summary>{text}</summary>
       {
         <ul>
-          {items.map(({ id, text, checked, active }, index) => (
+          {items.map(({ text, checked, active }, index) => (
             <li key={index}>
               <label>
                 <input
                   type="checkbox"
-                  id={id.toString()}
+                  id={text}
                   checked={checked}
                   disabled={!active}
                   onChange={() => onChange && onChange(index)}

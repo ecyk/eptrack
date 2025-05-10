@@ -14,7 +14,7 @@ export interface ThemeContextProps {
 }
 
 export const ThemeContext = createContext<ThemeContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export function useTheme(): ThemeContextProps {
@@ -32,7 +32,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   const defaultTheme = systemPrefersColorScheme || "dark";
   const [selectedTheme, setSelectedTheme] = useLocalStorageState(
     "picoColorScheme",
-    undefined
+    undefined,
   );
   const [theme, setTheme] = useState("dark");
 

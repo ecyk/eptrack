@@ -1,61 +1,36 @@
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import { createTag, deleteTag } from "../api";
-import { useAuth } from "../contexts/AuthContext";
+import { useStorageService } from "../contexts/StorageServiceContext";
 import { useModal } from "../contexts/ModalContext";
 import styles from "./Modal.module.css";
 
 interface TagModalProps {
   hasCancel: boolean;
-  onClose: (positive?: boolean) => void;
 }
 
-function TagModal({ hasCancel, onClose }: TagModalProps) {
+function TagModal({ hasCancel }: TagModalProps) {
   const { modalIsOpen, handleClose } = useModal();
 
-  const handleClickOverlay = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleClose(event);
+  const handleClickOverlay = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose(e);
     }
   };
 
-  const { isAuthenticated } = useAuth();
-  const [creating, setCreating] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const { userData, updateTags } = useStorageService();
   const [tagName, setTagName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const create = useMutation({
-    mutationFn: (request: tagRequest) =>
-      toast.promise(createTag(request), {
-        loading: "Creating tag...",
-        success: <b>Tag created!</b>,
-        error: <b>Could not create tag.</b>,
-      }),
-    onSuccess: () => handleClose(undefined, onClose, true),
-    onError: () => setCreating(false),
-  });
-
-  const remove = useMutation({
-    mutationFn: (request: tagRequest) =>
-      toast.promise(deleteTag(request), {
-        loading: "Deleting tag...",
-        success: <b>Tag deleted!</b>,
-        error: <b>Could not delete tag.</b>,
-      }),
-    onSuccess: () => handleClose(undefined, onClose, true),
-    onError: () => setDeleting(false),
-  });
-
-  const handleCreate = () => {
-    setCreating(true);
-    create.mutate({ name: tagName });
-  };
-
-  const handleDelete = () => {
-    setDeleting(true);
-    remove.mutate({ name: tagName });
+  const handleTagAction = (op: "add" | "remove", e: React.MouseEvent) => {
+    setIsLoading(true);
+    toast
+      .promise(updateTags({ id: tagName, op }), {
+        loading: op === "add" ? "Creating tag" : "Deleting tag",
+        error: <b>Could not {op === "add" ? "create" : "delete"} tag</b>,
+      })
+      .then(() => handleClose(e))
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -65,7 +40,7 @@ function TagModal({ hasCancel, onClose }: TagModalProps) {
           <button
             aria-label="Close"
             rel="prev"
-            onClick={(event) => handleClose(event)}
+            onClick={(e) => handleClose(e)}
           ></button>
           <h1>Manage Tags</h1>
         </header>
@@ -79,28 +54,26 @@ function TagModal({ hasCancel, onClose }: TagModalProps) {
         />
         <button
           type="button"
-          aria-busy={creating}
-          disabled={creating || deleting || !isAuthenticated}
-          onClick={handleCreate}
+          disabled={isLoading || !userData}
+          onClick={(e) => handleTagAction("add", e)}
         >
-          {!creating && "Create Tag"}
+          {"Create Tag"}
         </button>
         <button
           type="button"
           className="secondary"
           style={{ marginLeft: "0.25em" }}
-          aria-busy={deleting}
-          disabled={creating || deleting || !isAuthenticated}
-          onClick={handleDelete}
+          disabled={isLoading || !userData}
+          onClick={(e) => handleTagAction("remove", e)}
         >
-          {!deleting && "Delete Tag"}
+          {"Delete Tag"}
         </button>
         <footer>
           {hasCancel && (
             <button
-              disabled={creating || deleting}
+              disabled={isLoading}
               className="secondary"
-              onClick={(event) => handleClose(event)}
+              onClick={(e) => handleClose(e)}
             >
               Cancel
             </button>

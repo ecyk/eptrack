@@ -1,88 +1,104 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { produce } from "immer";
 import ISO6391 from "iso-639-1";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-import { updateDetail } from "../api";
-import { useAuth } from "../contexts/AuthContext";
+import {
+  EpisodeUpdate,
+  MediaUpdate,
+  TagUpdate,
+  useStorageService,
+} from "../contexts/StorageServiceContext";
 import { useModal } from "../contexts/ModalContext";
-import Dropdown from "./Dropdown";
+import Dropdown, { DropdownItem } from "./Dropdown";
 import { DropdownProps } from "./Dropdown";
 import styles from "./Modal.module.css";
+import { TmdbMedia, TmdbMovie, TmdbShow } from "../types";
+import { genres } from "../genres";
+import { fetchMedia } from "../api";
 
 interface MediaModalProps {
-  media: MovieResponse | ShowResponse;
-  tags: Tag[];
+  media: TmdbMedia;
   hasCancel: boolean;
   onClose: (positive?: boolean) => void;
 }
 
-function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
+function MediaModal({ media, hasCancel, onClose }: MediaModalProps) {
   const { modalIsOpen, handleClose } = useModal();
 
-  const handleClickOverlay = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleClose(event, onClose);
+  const handleClickOverlay = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleClose(e, onClose);
     }
   };
 
+  const { userData, updateMedia } = useStorageService();
+
   const data = useMutation({
-    mutationFn: (request: SaveMediaRequest) =>
-      toast.promise(updateDetail(request), {
-        loading: "Saving details...",
-        success: <b>Details saved!</b>,
-        error: <b>Could not save details.</b>,
+    mutationFn: (update: MediaUpdate) =>
+      toast.promise(updateMedia(update), {
+        loading: "Saving details",
+        error: <b>Could not save details</b>,
       }),
     onSuccess: () => handleClose(undefined, onClose, true),
     onError: () => setSaving(false),
   });
 
-  const { isAuthenticated } = useAuth();
+  const showDetails = useQuery<TmdbShow, Error>({
+    queryKey: ["showDetails", media],
+    queryFn: () => fetchMedia(media.id, "tv") as Promise<TmdbShow>,
+    enabled: media.media_type == "tv",
+    staleTime: Infinity,
+  });
 
-  const initDropdowns = useCallback((): DropdownProps[] => {
-    const initialDropdowns: DropdownProps[] = [];
+  const [dropdowns, setDropdowns] = useState<DropdownProps[]>([]);
 
-    if (isAuthenticated && tags.length !== 0) {
-      initialDropdowns.push({
+  useEffect(() => {
+    const dropdowns: DropdownProps[] = [];
+    if (userData) {
+      const isChecked = (tag: string) => {
+        if (media.media_type == "movie" && userData.movies[media.id]) {
+          return !!userData.movies[media.id].tags?.includes(tag);
+        }
+        return !!(
+          userData.shows[media.id] &&
+          userData.shows[media.id].tags?.includes(tag)
+        );
+      };
+      dropdowns.push({
         text: "Tags",
-        items: tags.map((tag) => ({
-          id: tag.tagId,
-          text: tag.name,
-          checked: (media as MediaDetail).tags?.includes(tag.tagId) ?? false,
+        items: Object.keys(userData.tags).map((tag) => ({
+          text: tag,
+          checked: isChecked(tag),
           active: true,
           updated: false,
         })),
         inline: true,
       });
     }
-
-    if (media.type === "tv") {
-      (media as ShowResponse).seasons.forEach((season) => {
-        initialDropdowns.push({
+    if (showDetails.data && media.media_type === "tv") {
+      (showDetails.data as TmdbShow).seasons.forEach((season) => {
+        dropdowns.push({
           text: season.name ?? "",
-          items: season.episodes.map((episode, episodeIndex) => ({
-            id: episode.id,
-            text: `${episodeIndex + 1}. ${episode.name}`,
-            checked:
-              (media as ShowResponse).watchedEpisodes?.includes(episode.id) ??
-              false,
-            active: isAuthenticated,
-            updated: false,
-          })),
+          items:
+            season.episodes?.map((episode, episodeIndex) => ({
+              text: `${episodeIndex + 1}. ${episode.name}`,
+              checked:
+                !!userData?.shows?.[media.id.toString()]?.seasons?.[
+                  season.id
+                ]?.[episode.id],
+              active: !!userData,
+              updated: false,
+              seasonId: season.id,
+              episodeId: episode.id,
+            })) || [],
           inline: true,
         });
       });
     }
-
-    return initialDropdowns;
-  }, [isAuthenticated, media, tags]);
-
-  const [dropdowns, setDropdowns] = useState<DropdownProps[]>(initDropdowns());
-
-  useEffect(() => {
-    setDropdowns(initDropdowns());
-  }, [media, initDropdowns]);
+    setDropdowns(dropdowns);
+  }, [userData, showDetails.data, media.media_type, media.id]);
 
   const handleDropdownChange = (dropdownIndex: number, itemIndex: number) => {
     setDropdowns((prev) =>
@@ -90,39 +106,53 @@ function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
         const item = draft[dropdownIndex].items[itemIndex];
         item.checked = !item.checked;
         item.updated = !item.updated;
-      })
+      }),
     );
   };
+
+  interface SeasonDropdownItem extends DropdownItem {
+    episodeId: string;
+    seasonId: string;
+  }
 
   const [saving, setSaving] = useState(false);
 
   const onSave = () => {
     const getUpdatedItems = (
       dropdowns: DropdownProps[],
-      tags: boolean
-    ): SaveData => {
+      tags: boolean,
+    ): DropdownItem[] => {
       return dropdowns
         .filter((dropdown) =>
-          tags ? dropdown.text === "Tags" : dropdown.text !== "Tags"
+          tags ? dropdown.text === "Tags" : dropdown.text !== "Tags",
         )
-        .flatMap((dropdown) => dropdown.items.filter((item) => item.updated))
-        .map((item) => [item.id, item.checked]);
+        .flatMap((dropdown) => dropdown.items.filter((item) => item.updated));
     };
-
-    const updatedTags = getUpdatedItems(dropdowns, true);
-    const updatedWatchedEpisodes = getUpdatedItems(dropdowns, false);
-
+    const updatedTags: TagUpdate[] = getUpdatedItems(dropdowns, true).map(
+      (item) => {
+        return { id: item.text, op: item.checked ? "add" : "remove" };
+      },
+    );
+    const updatedWatchedEpisodes: EpisodeUpdate[] = getUpdatedItems(
+      dropdowns,
+      false,
+    ).map((item) => {
+      return {
+        id: (item as SeasonDropdownItem).episodeId,
+        seasonId: (item as SeasonDropdownItem).seasonId,
+        op: item.checked ? "add" : "remove",
+      };
+    });
     if (!updatedTags.length && !updatedWatchedEpisodes.length) {
-      toast.error("Nothing is changed");
+      toast.error("Nothing has changed");
       return;
     }
-
     setSaving(true);
     data.mutate({
-      mediaId: media.id,
-      type: media.type,
+      id: media.id.toString(),
+      type: media.media_type,
       tags: updatedTags,
-      watchedEpisodes: updatedWatchedEpisodes,
+      episodes: updatedWatchedEpisodes,
     });
   };
 
@@ -133,15 +163,15 @@ function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
           <button
             aria-label="Close"
             rel="prev"
-            onClick={(event) => handleClose(event, onClose)}
+            onClick={(e) => handleClose(e, onClose)}
           ></button>
-          <h1>{media.name}</h1>
+          <h1>{media.title ?? media.name}</h1>
         </header>
         <div>
           <p>{media.overview}</p>
           <p>
             <b>Type: </b>
-            {media.type === "movie" ? "Movie" : "TV Show"}
+            {media.media_type === "movie" ? "Movie" : "TV Show"}
           </p>
           <p>
             <b>Original Language: </b>
@@ -150,11 +180,19 @@ function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
           </p>
           <p>
             <b>Release Date: </b>
-            {media.release_date}
+            {media.media_type === "movie"
+              ? (media as TmdbMovie).release_date
+              : (media as TmdbShow).first_air_date}
           </p>
           <p>
             <b>Genre: </b>
-            {media.genres.map(({ name }) => name).join(", ")}
+            {media.genres && media.genres.length > 0
+              ? media.genres.map((genre) => genre.name).join(", ")
+              : media.genre_ids && media.genre_ids.length > 0
+                ? media.genre_ids
+                    .map((id) => genres[id.toString()] ?? "Unknown")
+                    .join(", ")
+                : "Unknown"}
           </p>
           {dropdowns.map(({ text, items, initialOpen, inline }, index) => (
             <Dropdown
@@ -172,14 +210,14 @@ function MediaModal({ media, tags, hasCancel, onClose }: MediaModalProps) {
             <button
               disabled={saving}
               className="secondary"
-              onClick={(event) => handleClose(event, onClose)}
+              onClick={handleClickOverlay}
             >
               Cancel
             </button>
           )}
           <button
             aria-busy={saving}
-            disabled={saving || !isAuthenticated}
+            disabled={saving || !userData}
             onClick={onSave}
           >
             {!saving && "Save"}

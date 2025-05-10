@@ -1,181 +1,145 @@
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import classNames from "classnames";
-import { PropsWithChildren, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce";
-
-import { fetchAllTags, fetchDetail, fetchItems } from "../api";
-import { useAuth } from "../contexts/AuthContext";
 import { useModal } from "../contexts/ModalContext";
 import DetailModal from "./DetailModal";
 import styles from "./Grid.module.css";
 import Search from "./Search";
+import { BasicTmdbMedia, TmdbMedia } from "../types";
+import { fetchItems } from "../api";
+import { Toaster } from "react-hot-toast";
+import { useStorageService } from "../contexts/StorageServiceContext";
 import TagModal from "./TagModal";
-
-interface SkeletonProps {
-  className?: string;
-}
-
-function Skeleton({ className, children }: PropsWithChildren<SkeletonProps>) {
-  return (
-    <div className={classNames(styles.skeleton, className)}>{children}</div>
-  );
-}
-
-interface ItemProps {
-  media?: Media;
-  onClick?: (event: React.MouseEvent, media: Media) => void;
-}
-
-function Item({ media, onClick }: ItemProps) {
-  return (
-    <article
-      className={styles.item}
-      onClick={(event) => media?.id && onClick && onClick(event, media)}
-    >
-      <button className={classNames("outline", "contrast", styles.btn)}>
-        <Skeleton className={styles["skeleton-image"]}>
-          {media?.poster_path && (
-            <img
-              className={styles.image}
-              src={`https://www.themoviedb.org/t/p/w500${media.poster_path}`}
-            />
-          )}
-        </Skeleton>
-        {
-          <figcaption>
-            {media?.name ?? <Skeleton className={styles["skeleton-line"]} />}
-          </figcaption>
-        }
-      </button>
-    </article>
-  );
-}
+import GridItem, { isTmdbMedia } from "./GridItem";
 
 function Grid() {
   const client = useQueryClient();
-  const { isAuthenticated } = useAuth();
+  const { userData } = useStorageService();
 
-  const tags = useQuery<Tag[], Error>({
-    queryKey: ["tags"],
-    queryFn: () => fetchAllTags(),
-    enabled: isAuthenticated,
-    staleTime: Infinity,
-  });
+  const searchItems = async (
+    page: number,
+    searchQuery: string,
+    searchTags: string[],
+  ) => {
+    if (searchTags.length && userData?.tags) {
+      const tagSets = searchTags
+        .map((tag) => new Set(userData.tags[tag] || []))
+        .filter((set) => set.size > 0);
+      if (tagSets.length !== searchTags.length) {
+        return {
+          nextCursor: null,
+          results: [],
+          page,
+          total_pages: 0,
+        };
+      }
+      const [firstSet, ...restSets] = tagSets;
+      const intersection = Array.from(firstSet).filter((id) =>
+        restSets.every((set) => set.has(id)),
+      );
+      const filteredIds = new Set(intersection);
+      const allResults: BasicTmdbMedia[] = Array.from(filteredIds)
+        .map((id) => {
+          if (userData.movies?.[id]) {
+            return { id: parseInt(id), media_type: "movie" } as BasicTmdbMedia;
+          }
+          if (userData.shows?.[id]) {
+            return { id: parseInt(id), media_type: "tv" } as BasicTmdbMedia;
+          }
+          return null;
+        })
+        .filter((media) => media !== null);
+      const total_pages = Math.ceil(allResults.length / 20);
+      const start = (page - 1) * 20;
+      const end = start + 20;
+      const results = allResults.slice(start, end);
+      return {
+        nextCursor: page < total_pages ? page + 1 : null,
+        results,
+        page,
+        total_pages,
+      };
+    }
+    return await fetchItems(page, searchQuery);
+  };
 
-  const [searchTags, setSearchTags] = useState<number[]>([]);
+  const [searchTags, setSearchTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryDebounce] = useDebounce(searchQuery, 300);
 
-  const items = useInfiniteQuery({
-    queryKey: ["items", searchQueryDebounce, searchTags],
-    queryFn: ({ pageParam }) =>
-      fetchItems(pageParam, searchQueryDebounce, searchTags),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: Infinity,
-  });
-
-  const loadingSkeletonCount = 25;
-  const totalItemCount =
-    items.data?.pages.reduce((total, page) => total + page.results.length, 0) ??
-    loadingSkeletonCount;
+  const { data, hasNextPage, fetchNextPage, isLoading, isLoadingError } =
+    useInfiniteQuery({
+      queryKey: ["items", searchQueryDebounce, searchTags],
+      queryFn: ({ pageParam }) =>
+        searchItems(pageParam, searchQueryDebounce, searchTags),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      staleTime: Infinity,
+    });
 
   const { modalIsOpen, handleOpen } = useModal();
-  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
-
-  const details = useQuery<MovieResponse | ShowResponse, Error>({
-    queryKey: ["details", selectedMedia],
-    queryFn: () =>
-      toast.promise(fetchDetail(selectedMedia), {
-        loading: "Loading details...",
-        success: <b>Details loaded!</b>,
-        error: <b>Could not load details.</b>,
-      }),
-    enabled: selectedMedia != null,
-    staleTime: Infinity,
-  });
+  const [selectedMedia, setSelectedMedia] = useState<TmdbMedia | null>(null);
 
   useEffect(() => {
-    if (!modalIsOpen && details.isSuccess) {
+    if (selectedMedia && !modalIsOpen) {
       handleOpen();
     }
-  }, [modalIsOpen, details.isSuccess, handleOpen]);
+  }, [selectedMedia, modalIsOpen, handleOpen]);
 
   return (
     <>
       <Toaster position="bottom-right" />
       <Search
-        tags={tags?.data ?? []}
         searchQuery={searchQuery}
         onSearchQueryChange={setSearchQuery}
         onSearchTagChange={setSearchTags}
       />
       <InfiniteScroll
-        dataLength={totalItemCount}
-        next={items.fetchNextPage}
-        style={{ overflowY: "hidden" }}
-        hasMore={items.hasNextPage}
-        loader={null}
-        endMessage={
-          <p className={styles["end-message"]}>
-            <b>That&apos;s all!</b>
-          </p>
+        dataLength={
+          data?.pages.reduce((total, page) => total + page.results.length, 0) ??
+          20
         }
+        next={fetchNextPage}
+        style={{ overflowY: "hidden" }}
+        hasMore={hasNextPage}
+        loader={null}
       >
         <div className={styles.grid}>
-          {items.data?.pages.flatMap((page, index) =>
-            page.results.map((item, innerIndex) => (
-              <Item
-                key={`media-${index}-${innerIndex}`}
-                media={item}
-                onClick={() => setSelectedMedia(item)}
-              />
-            ))
-          )}
-          {(items.isLoading || items.isLoadingError) &&
-            Array.from({ length: loadingSkeletonCount }, (_, index) => (
-              <Item key={index} />
-            ))}
+          {Array.from(
+            new Map(
+              data?.pages
+                .flatMap((page) => page.results)
+                .filter((item) => (item.media_type as unknown) !== "person")
+                .map((item) => [`${item.id}-${item.media_type}`, item]),
+            ).values(),
+          ).map((item) => (
+            <GridItem
+              key={`media-${item.id}-${item.media_type}`}
+              media={item}
+              onClick={(media) => {
+                if (isTmdbMedia(media)) {
+                  setSelectedMedia(media);
+                }
+              }}
+            />
+          ))}
+          {(isLoading || isLoadingError) &&
+            Array.from({ length: 20 }, (_, index) => <GridItem key={index} />)}
         </div>
       </InfiniteScroll>
-      {modalIsOpen && selectedMedia == null && (
-        <TagModal
-          hasCancel={true}
-          onClose={(positive?: boolean) => {
-            if (positive) {
-              void client.refetchQueries({
-                queryKey: ["tags"],
-              });
-            }
-          }}
-        />
-      )}
-      {modalIsOpen && selectedMedia != null && details.isSuccess && (
+      {modalIsOpen && selectedMedia == null && <TagModal hasCancel={true} />}
+      {modalIsOpen && selectedMedia != null && (
         <DetailModal
-          media={details.data}
-          tags={tags?.data ?? []}
+          media={selectedMedia}
           hasCancel={true}
           onClose={(positive?: boolean) => {
             if (positive) {
-              void client.refetchQueries({
-                queryKey: ["items", searchQueryDebounce, searchTags],
+              void client.invalidateQueries({
+                queryKey: ["items"],
               });
-
-              void client
-                .invalidateQueries({
-                  queryKey: ["details", selectedMedia],
-                  refetchType: "none",
-                })
-                .then(() => setSelectedMedia(null));
-            } else {
-              setSelectedMedia(null);
             }
+            setSelectedMedia(null);
           }}
         />
       )}

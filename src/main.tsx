@@ -10,9 +10,10 @@ import ReactDOM from "react-dom/client";
 import toast from "react-hot-toast";
 
 import App from "./App.tsx";
-import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { StorageServiceProvider } from "./contexts/StorageServiceContext.tsx";
 import { ModalProvider } from "./contexts/ModalContext.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -25,13 +26,15 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
-        </QueryClientProvider>
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <StorageServiceProvider>
+          <QueryClientProvider client={queryClient}>
+            <ModalProvider>
+              <App />
+            </ModalProvider>
+          </QueryClientProvider>
+        </StorageServiceProvider>
+      </GoogleOAuthProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -1,44 +1,61 @@
-import { produce } from "immer";
-import { useCallback, useEffect, useState } from "react";
+// import { produce } from "immer";
+// import { useCallback, useEffect, useState } from "react";
 
-import { useAuth } from "../contexts/AuthContext";
+import { useStorageService } from "../contexts/StorageServiceContext";
 import { useModal } from "../contexts/ModalContext";
-import Dropdown, { DropdownItem } from "./Dropdown";
+// import Dropdown, { DropdownItem } from "./Dropdown";
 import styles from "./Search.module.css";
+import { produce } from "immer";
+import { useCallback, useState, useEffect } from "react";
+import Dropdown, { DropdownItem } from "./Dropdown";
 
 interface SearchProps {
-  tags: Tag[];
   searchQuery: string;
   onSearchQueryChange: (query: string) => void;
-  onSearchTagChange: (tags: number[]) => void;
+  onSearchTagChange: (tags: string[]) => void;
 }
 
 function Search({
-  tags,
   searchQuery,
   onSearchQueryChange,
   onSearchTagChange,
 }: SearchProps) {
-  const { isAuthenticated } = useAuth();
   const { handleOpen } = useModal();
+  const { userData } = useStorageService();
 
   const initItems = useCallback(() => {
-    return tags.map((tag) => ({
-      id: tag.tagId,
-      text: tag.name,
+    return Object.keys(userData?.tags || {}).map((tag) => ({
+      text: tag,
       checked: false,
       active: true,
       updated: false,
     }));
-  }, [tags]);
+  }, [userData?.tags]);
 
-  const [tagDropdownItems, setTagDropdownItems] = useState<DropdownItem[]>(
-    initItems()
-  );
+  const [tagDropdownItems, setTagDropdownItems] =
+    useState<DropdownItem[]>(initItems());
 
   useEffect(() => {
-    setTagDropdownItems(initItems());
-  }, [initItems, tags]);
+    const newItems = initItems();
+
+    setTagDropdownItems((prevItems) => {
+      const checkedTags = new Set(
+        prevItems.filter((item) => item.checked).map((item) => item.text),
+      );
+
+      return newItems.map((item) => ({
+        ...item,
+        checked: checkedTags.has(item.text),
+      }));
+    });
+  }, [initItems]);
+
+  useEffect(() => {
+    const checkedTags = tagDropdownItems
+      .filter((item) => item.checked)
+      .map((item) => item.text);
+    onSearchTagChange(checkedTags);
+  }, [onSearchTagChange, tagDropdownItems]);
 
   const handleDropdownChange = (itemIndex: number) => {
     setTagDropdownItems((prev) =>
@@ -46,13 +63,7 @@ function Search({
         const item = draft[itemIndex];
         item.checked = !item.checked;
         item.updated = !item.updated;
-
-        const checkedTagIds = draft
-          .filter((item) => item.checked)
-          .map((item) => item.id);
-
-        onSearchTagChange(checkedTagIds);
-      })
+      }),
     );
   };
 
@@ -68,7 +79,7 @@ function Search({
         onChange={(e) => onSearchQueryChange(e.target.value)}
       />
 
-      {isAuthenticated && tagDropdownItems.length !== 0 && (
+      {userData && tagDropdownItems.length !== 0 && (
         <Dropdown
           text="Tag"
           items={tagDropdownItems}
@@ -76,7 +87,7 @@ function Search({
         />
       )}
 
-      {isAuthenticated && (
+      {!!userData && (
         <button
           type="button"
           className={styles["manage-tags-btn"]}
